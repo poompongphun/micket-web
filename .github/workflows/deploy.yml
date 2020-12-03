@@ -50,6 +50,3 @@ jobs:
           branch: main
           # The subfolder where your built code is sitted, e.g. `dist`.
           #subfolder: 
-          
-      - name: Start
-        run: npm start
