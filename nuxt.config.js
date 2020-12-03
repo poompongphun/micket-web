@@ -1,6 +1,16 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
+  /*
+   ** Nuxt rendering mode
+   ** See https://nuxtjs.org/api/configuration-mode
+   */
+  ssr: true,
+  /*
+   ** Nuxt target
+   ** See https://nuxtjs.org/api/configuration-target
+   */
+  target: 'universal',
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     titleTemplate: '%s - micket-web',
@@ -62,8 +72,4 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
-  server: {
-    port: 8000, // default: 3000
-    host: '0.0.0.0', // default: localhost
-  },
 }
