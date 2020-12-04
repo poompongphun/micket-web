@@ -1,7 +1,11 @@
 <template>
-  <v-app>
+  <v-app style="font-family: 'Poppins', sans-serif">
     <div class="custom-container" :class="{ 'sign-up-mode': signIn }">
-      <nuxt class="forms-container" />
+      <div class="forms-container">
+        <div class="signin-signup">
+          <nuxt />
+        </div>
+      </div>
       <div class="panels-container">
         <div class="panel left-panel">
           <div class="content">
@@ -11,11 +15,11 @@
               ex ratione. Aliquid!
             </p>
             <v-btn
-              class="py-3 px-7"
+              class="py-5 px-8"
               color="white"
               outlined
               rounded
-              @click="swap()"
+              @click="goSignUp"
             >
               Sign up
             </v-btn>
@@ -30,11 +34,11 @@
               laboriosam ad deleniti.
             </p>
             <v-btn
-              class="py-3 px-7"
+              class="py-5 px-8"
               color="white"
               outlined
               rounded
-              @click="swap()"
+              @click="goSignIn"
             >
               Sign in
             </v-btn>
@@ -57,9 +61,30 @@ export default {
       signIn: false,
     }
   },
+  watch: {
+    '$route.name'(id) {
+      this.checkRoute()
+    },
+  },
+  created() {
+    this.checkRoute()
+  },
   methods: {
-    swap() {
-      this.signIn = !this.signIn
+    goSignUp() {
+      this.$router.push('/signup')
+      this.signIn = true
+    },
+    goSignIn() {
+      this.$router.push('/signin')
+      this.signIn = false
+    },
+    checkRoute() {
+      const routeName = this.$route.name.toString()
+      if (routeName === 'signin') {
+        this.signIn = false
+      } else {
+        this.signIn = true
+      }
     },
   },
 }
