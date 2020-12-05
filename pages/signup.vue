@@ -43,5 +43,9 @@
 <script>
 export default {
   layout: 'auth',
+  validate({ store }) {
+    if (store.state.auth.loggedIn) return false
+    else return true
+  },
 }
 </script>
