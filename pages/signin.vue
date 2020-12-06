@@ -3,6 +3,7 @@
     <h2 class="authTitle">Sign in</h2>
     <v-text-field
       v-model="username"
+      :disabled="logingIn"
       type="email"
       class="custom-auth-textfield"
       name="email"
@@ -12,6 +13,7 @@
     ></v-text-field>
     <v-text-field
       v-model="password"
+      :disabled="logingIn"
       type="password"
       class="custom-auth-textfield"
       name="password"
@@ -20,14 +22,31 @@
       filled
       rounded
     ></v-text-field>
+    <v-alert
+      v-show="alertError && !logingIn"
+      v-model="alertError"
+      class="custom-auth-textfield"
+      type="error"
+      dense
+      dismissible
+      text
+      transition="scroll-y-transition"
+    >
+      {{ error }}
+    </v-alert>
     <v-btn
       class="py-6 px-12 white--text"
       color="#5995fd"
+      :loading="logingIn"
+      :disabled="logingIn"
       rounded
       depressed
       @click.stop="submitLogin(username, password)"
     >
       Login
+      <template v-slot:loader>
+        <span>Logging in...</span>
+      </template>
     </v-btn>
     <p class="social-text">Or Sign in with social platforms</p>
     <div class="social-media">
@@ -51,6 +70,9 @@ export default {
     return {
       username: '',
       password: '',
+      logingIn: false,
+      alertError: false,
+      error: '',
     }
   },
   validate({ store }) {
@@ -58,7 +80,9 @@ export default {
     else return true
   },
   methods: {
+    // login methods
     async submitLogin(user, pass) {
+      this.logingIn = true
       try {
         const loginData = {
           email: user,
@@ -68,8 +92,13 @@ export default {
           data: loginData,
         })
       } catch (error) {
-        console.log(error)
+        // show error
+        this.alertError = true
+        this.error = error.response.data
       }
+      setTimeout(() => {
+        this.logingIn = false
+      }, 500)
     },
   },
 }
