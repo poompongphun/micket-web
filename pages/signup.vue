@@ -49,6 +49,18 @@
       @input="$v.confirm.$touch()"
       @blur="$v.confirm.$touch()"
     ></v-text-field>
+    <v-alert
+      v-show="alertError && !registering"
+      v-model="alertError"
+      class="custom-auth-textfield"
+      :type="alertType"
+      dense
+      dismissible
+      text
+      transition="scroll-y-transition"
+    >
+      {{ alertMsg }}
+    </v-alert>
     <v-btn
       class="py-6 px-12 white--text"
       color="#5995fd"
@@ -107,7 +119,7 @@ export default {
       required,
       email,
     },
-    password: { required, minLength: minLength(4), maxLength: maxLength(128) },
+    password: { required, minLength: minLength(6), maxLength: maxLength(128) },
     confirm: {
       required,
       sameAsPassword: sameAs('password'),
@@ -119,9 +131,15 @@ export default {
       email: '',
       password: '',
       confirm: '',
+
       timeout: null,
       errorName: [],
       errorEmail: [],
+
+      registering: false,
+      alertError: false,
+      alertType: 'error',
+      alertMsg: '',
     }
   },
   computed: {
@@ -148,7 +166,7 @@ export default {
       const errors = []
       if (!this.$v.password.$dirty) return errors
       !this.$v.password.minLength &&
-        errors.push('Password must be at least 4 characters long')
+        errors.push('Password must be at least 6 characters long')
       !this.$v.password.maxLength &&
         errors.push('Password must be at most 128 characters long')
       !this.$v.password.required && errors.push('Password is required')
@@ -173,6 +191,7 @@ export default {
           .then((res) => {
             this.errorName = res.data.isAvailable ? [] : ['Username is used']
           })
+          .catch((error) => alert(error))
       }, 500)
     },
     email(val) {
@@ -185,31 +204,54 @@ export default {
           .then((res) => {
             this.errorEmail = res.data.isAvailable ? [] : ['Email is used']
           })
+          .catch((error) => alert(error))
       }, 500)
     },
   },
   methods: {
-    submit() {
+    async submit() {
+      this.registering = true
       this.$v.$touch()
       if (
         !this.$v.$invalid ||
         this.errorEmail.length === 0 ||
         this.errorName.length === 0
       ) {
-        const userData = {
-          username: this.username,
-          email: this.email,
-          password: this.password,
+        try {
+          const userData = {
+            name: this.username,
+            username: this.username,
+            email: this.email,
+            password: this.password,
+          }
+          const response = await this.$axios.post(
+            '/api/auth/register',
+            userData,
+            { progress: false }
+          )
+          if (await response) {
+            this.alertType = 'success'
+            this.alertError = true
+            this.alertMsg = 'Register Successfully'
+            this.clear()
+          }
+        } catch (error) {
+          this.alertType = 'error'
+          this.alertError = true
+          // this.error = error.response.data
+          this.alertMsg = error.response.data
         }
-        console.log(userData)
       }
+      setTimeout(() => {
+        this.registering = false
+      }, 500)
     },
     clear() {
       this.$v.$reset()
-      this.name = ''
+      this.username = ''
       this.email = ''
-      this.select = null
-      this.checkbox = false
+      this.password = ''
+      this.confirm = ''
     },
   },
 }
