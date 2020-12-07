@@ -1,6 +1,14 @@
 <template>
   <v-app style="font-family: 'Poppins', sans-serif">
-    <div class="custom-container" :class="{ 'sign-up-mode': signIn }">
+    <div
+      class="custom-container"
+      :class="{ 'sign-up-mode': signIn }"
+      :style="
+        this.$vuetify.breakpoint.smAndDown
+          ? `height: ${signIn ? '900px' : '700px'}`
+          : ''
+      "
+    >
       <div class="forms-container">
         <div class="signin-signup">
           <nuxt />

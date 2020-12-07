@@ -186,6 +186,7 @@
 
 @media (max-width: 870px) {
   .custom-container {
+    transition: 1.5s;
     min-height: 800px;
     height: 100vh;
     &:before {
