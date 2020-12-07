@@ -38,7 +38,7 @@
       class="py-6 px-12 white--text"
       color="#5995fd"
       :loading="logingIn"
-      :disabled="logingIn"
+      :disabled="logingIn || username === '' || password === ''"
       rounded
       depressed
       @click.stop="submitLogin(username, password)"
