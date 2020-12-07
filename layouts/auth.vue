@@ -5,7 +5,7 @@
       :class="{ 'sign-up-mode': signIn }"
       :style="
         this.$vuetify.breakpoint.smAndDown
-          ? `height: ${signIn ? '900px' : '700px'}`
+          ? `min-height: ${signIn ? '900px' : '700px'}`
           : ''
       "
     >
