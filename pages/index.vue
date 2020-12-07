@@ -2,7 +2,9 @@
   <div>
     <v-btn color="success" to="/signin">Login Page</v-btn>
     <v-btn color="success" @click="logout">logout</v-btn>
-    Hello {{ $store.getters.loggedInUser.name }}
+    <div v-if="this.$store.state.auth.loggedIn">
+      Hello {{ $store.getters.loggedInUser.name }}
+    </div>
   </div>
 </template>
 
