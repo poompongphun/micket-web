@@ -2,6 +2,6 @@ export const state = () => ({})
 
 export const getters = {
   loggedInUser(state) {
-    return state.auth
+    return state.auth.user
   },
 }
