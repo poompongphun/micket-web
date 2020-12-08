@@ -1,6 +1,6 @@
 <template>
   <v-form action="#" class="custom-form sign-up-form" autocomplete="off">
-    <h1 class="authTitle">Sign up</h1>
+    <h1 class="authTitle normalText--text">Sign up</h1>
     <v-text-field
       v-model.trim="username"
       :error-messages="errorName.length === 0 ? usernameErrors : errorName"

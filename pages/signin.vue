@@ -1,6 +1,6 @@
 <template>
   <v-form action="#" class="custom-form sign-in-form" autocomplete="off">
-    <h2 class="authTitle">Sign in</h2>
+    <h2 class="authTitle normalText--text">Sign in</h2>
     <v-text-field
       v-model="username"
       :disabled="logingIn"
