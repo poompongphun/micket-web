@@ -1,56 +1,77 @@
 <template>
   <div>
-    <v-row justify="start" align="center">
-      <v-col v-for="counts in count" :key="counts" cols="4">
-        <v-card class="mx-auto" max-width="344">
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-            height="200px"
-          ></v-img>
-
-          <v-card-title> Top western road trips </v-card-title>
-
-          <v-card-subtitle> 1,000 miles of wonder </v-card-subtitle>
-
-          <v-card-actions>
-            <v-btn color="orange lighten-2" text> Explore </v-btn>
-
-            <v-spacer></v-spacer>
-
-            <v-btn icon @click="show = !show">
-              <v-icon>{{
-                show ? 'mdi-chevron-up' : 'mdi-chevron-down'
-              }}</v-icon>
-            </v-btn>
-          </v-card-actions>
-
-          <v-expand-transition>
-            <div v-show="show">
-              <v-divider></v-divider>
-
-              <v-card-text>
-                I'm a thing. But, like most politicians, he promised more than
-                he could deliver. You won't have time for sleeping, soldier, not
-                with all the bed making you'll be doing. Then we'll go with that
-                data file! Hey, you add a one and two zeros to that or we walk!
-                You're going to do his laundry? I've got to find a way to
-                escape.
-              </v-card-text>
-            </div>
-          </v-expand-transition>
-        </v-card>
-      </v-col>
-    </v-row>
+    <v-text-field
+      name="search"
+      label="Search"
+      class="mb-3"
+      block
+      filled
+      rounded
+      dense
+      hide-details
+      append-icon="mdi-magnify"
+    ></v-text-field>
+    <promoteSlide />
+    <h2 class="py-2">Recommended</h2>
+    <v-slide-group
+      v-model="model"
+      active-class="success"
+      mobile-breakpoint="500"
+      class="custom-slide"
+    >
+      <v-slide-item v-for="n in count" :key="n">
+        <movieBlock />
+      </v-slide-item>
+      <!-- <template v-slot:next> > </template> -->
+    </v-slide-group>
   </div>
 </template>
 
 <script>
+import promoteSlide from '@/components/movie/promoteSlide'
+import movieBlock from '@/components/movie/movieBlock'
 export default {
-  data() {
-    return {
-      count: 5,
-      show: false,
-    }
+  components: {
+    promoteSlide,
+    movieBlock,
   },
+  data: () => ({
+    count: 5,
+    model: null,
+  }),
 }
 </script>
+
+<style lang="scss">
+.custom-slide .v-slide-group__next,
+.custom-slide .v-slide-group__prev {
+  position: absolute;
+  z-index: 1;
+  height: 100%;
+  transition: 0.2s;
+  i {
+    color: white;
+  }
+}
+.custom-slide .v-slide-group__next {
+  right: 0px;
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.6)
+  );
+}
+.custom-slide .v-slide-group__prev {
+  left: 0px;
+  background-image: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.6)
+  );
+}
+.custom-slide .v-slide-group__next--disabled,
+.custom-slide .v-slide-group__prev--disabled {
+  transition: 0.2s;
+  opacity: 0;
+}
+</style>

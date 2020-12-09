@@ -1,6 +1,6 @@
 <template>
   <v-app light style="font-family: 'Poppins', sans-serif">
-    <v-app-bar color="navbar" dense app clipped-left flat>
+    <v-app-bar color="navbar" app clipped-left flat>
       <v-app-bar-nav-icon @click.stop="showDrawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title>Micket</v-toolbar-title>
