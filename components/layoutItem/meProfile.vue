@@ -1,6 +1,5 @@
 <template>
   <v-menu
-    v-model="menu"
     :close-on-content-click="false"
     offset-x
     transition="slide-x-reverse-transition"

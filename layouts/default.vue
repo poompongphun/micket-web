@@ -34,6 +34,7 @@
       <v-container fluid>
         <nuxt />
       </v-container>
+      <div class="pa-15 navbar"></div>
     </v-main>
   </v-app>
 </template>
