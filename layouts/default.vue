@@ -27,10 +27,21 @@
         </v-list>
       </v-menu> -->
     </v-app-bar>
-
     <navDrawer ref="drawer" />
 
-    <v-main>
+    <v-row v-if="loading" class="fill-height" justify="center" align="center">
+      <div class="text-center navbar py-10 px-15 rounded-xl">
+        <v-progress-circular
+          :size="80"
+          :width="7"
+          color="primary"
+          indeterminate
+        ></v-progress-circular>
+        <h2 class="pt-5 primary--text">Loading</h2>
+      </div>
+    </v-row>
+
+    <v-main v-else>
       <v-container fluid>
         <nuxt />
       </v-container>
@@ -46,6 +57,21 @@ export default {
   components: {
     meProfile,
     navDrawer,
+  },
+  data: () => ({
+    loading: true,
+  }),
+  beforeMount() {
+    const readyHandler = () => {
+      if (document.readyState === 'complete') {
+        this.loading = false
+        document.removeEventListener('readystatechange', readyHandler)
+      }
+    }
+
+    document.addEventListener('readystatechange', readyHandler)
+
+    readyHandler() // in case the component has been instantiated lately after loading
   },
   methods: {
     showDrawer() {

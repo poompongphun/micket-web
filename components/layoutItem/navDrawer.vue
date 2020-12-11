@@ -8,7 +8,7 @@
     :floating="$vuetify.breakpoint.mdAndUp"
     :permanent="$vuetify.breakpoint.mdAndUp"
     :mini-variant="variant"
-    :absolute="$vuetify.breakpoint.smAndDow"
+    :absolute="$vuetify.breakpoint.smAndDown"
     :temporary="$vuetify.breakpoint.smAndDown"
   >
     <v-list dense nav class="py-0 mt-2">
