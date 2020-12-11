@@ -20,7 +20,11 @@
       class="custom-slide"
     >
       <v-slide-item v-for="movie in movies" :key="movie.title">
-        <movieBlock :movie-detail="movie" />
+        <movieBlock
+          :movie-detail="movie"
+          :item-size-mobile="$vuetify.breakpoint.sm ? 1.1 : 1.3"
+          :menu-size-mobile="$vuetify.breakpoint.sm ? 1.1 : 1.3"
+        />
       </v-slide-item>
       <!-- <template v-slot:next> > </template> -->
     </v-slide-group>
@@ -62,7 +66,7 @@ export default {
           'https://cdn.lifestyleasia.com/wp-content/uploads/sites/3/2020/10/30125302/AAAABcL2iWNIx4vi4cc0PT0PTlMcuXiOrJcg0UujHyeug-6AETl6AmELWTiRI0nzrJ4MyTI-mPSFzuSnLTH63iJyJxMIVp5M-1600x900.jpg',
         price: 44,
         own_count: 222,
-        like: 333,
+        like: 33,
         tag: ['Drama'],
       },
       {
