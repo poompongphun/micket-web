@@ -12,6 +12,7 @@
           <v-row class="fill-height" align="center" justify="center" no-gutters>
             <v-col md="8" cols="12">
               <v-img
+                :aspect-ratio="16 / 9"
                 src="https://www.gamingdose.com/wp-content/uploads/2020/01/AAAABXH81uXzUNSVsIbZbV8eUidh4wf4mUXniE9hZb8926m7asXYaCh9XnjYuO4VSkZeJU_Nitzm8TotvouCYI15UIrX_tBp-1920x1080.jpg"
               ></v-img>
             </v-col>

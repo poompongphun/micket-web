@@ -42,6 +42,7 @@
                   :small="btnMenuResponsive"
                   fab
                   depressed
+                  :to="'/movie/' + movieDetail.title"
                   v-bind="attrs"
                   v-on="on"
                 >
