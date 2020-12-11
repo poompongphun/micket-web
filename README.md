@@ -1,7 +1,10 @@
-# micket-web
+# Micket
+Welcome to Micket!
+
+## Watch movie Here!
+You can find your favorite movie and watch here!
 
 ## Build Setup
-
 ```bash
 # install dependencies
 $ npm install
