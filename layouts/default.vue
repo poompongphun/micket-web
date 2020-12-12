@@ -45,7 +45,11 @@
       <v-container fluid>
         <nuxt />
       </v-container>
-      <div class="pa-15 navbar"></div>
+      <!-- <v-footer padless>
+        <v-col class="text-center navbar" cols="12">
+          {{ new Date().getFullYear() }} — <strong>Micket</strong>
+        </v-col>
+      </v-footer> -->
     </v-main>
   </v-app>
 </template>

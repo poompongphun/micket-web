@@ -121,6 +121,10 @@ export default {
     },
   },
 
+  env: {
+    PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID,
+  },
+
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
 }
