@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h1 class="pa-10 text-center">฿{{ toFixed(money) }}</h1>
+    <h1 class="pa-10 text-center">
+      ${{ toFixed($store.getters.loggedInUser.coins) }}
+    </h1>
     <v-row justify="center" align="start">
       <v-col cols="12" sm="9">
         <v-card>
@@ -13,10 +15,10 @@
                 }`"
               >
                 <v-text-field
-                  v-model="moneyText"
+                  v-model="moneyAdd.money"
                   name="money"
                   class="text-center center-input"
-                  prefix="฿"
+                  prefix="$"
                   readonly
                 ></v-text-field>
               </div>
@@ -37,7 +39,7 @@
                     rounded
                     @click="addMoney(money)"
                   >
-                    ฿{{ toFixed(money) }}
+                    ${{ toFixed(money) }}
                   </v-btn>
                 </v-col>
               </v-row>
@@ -46,8 +48,8 @@
         </v-card>
       </v-col>
       <v-col cols="12" sm="3">
-        <v-card class="elevation-0" :disabled="moneyText === ''">
-          <div ref="paypal"></div>
+        <v-card class="elevation-0" :disabled="moneyAdd.money === ''">
+          <div id="paypal-button" ref="paypal"></div>
           <div v-if="paidFor">
             <h1>Sccessfully!</h1>
           </div>
@@ -62,16 +64,14 @@ export default {
   name: 'HelloWorld',
 
   data: () => ({
-    money: 0,
+    // money: this.$store.getters.loggedInUser.coins,
     banks: [100, 200, 300, 500, 750, 1000, 1500, 2000],
     loaded: false,
     paidFor: false,
-    moneyText: '',
-    // product: {
-    //   price: 777.77,
-    //   description: 'leg lamp from that one movie',
-    //   img: './assets/lamp.jpg',
-    // },
+    moneyAdd: {
+      money: '',
+      currency: 'USD',
+    },
   }),
   mounted() {
     const script = document.createElement('script')
@@ -84,32 +84,35 @@ export default {
       this.loaded = true
       window.paypal
         .Buttons({
-          createOrder: (data, actions) => {
-            return actions.order.create({
-              purchase_units: [
-                {
-                  description: `Add ${this.moneyText} baht to Wallet`,
-                  amount: {
-                    currency_code: 'USD',
-                    value: parseFloat(this.moneyText),
-                  },
-                },
-              ],
-            })
+          createOrder: async (data, actions) => {
+            const response = await this.$axios.post(
+              '/api/wallet/add/',
+              this.moneyAdd
+            )
+            return response.data.token
           },
           onApprove: async (data, actions) => {
-            const order = await actions.order.capture()
-            this.paidFor = true
-            console.log(order)
-            this.money += parseFloat(
-              order.purchase_units.reduce(
-                (total, unit) => total + unit.amount.value,
-                0
-              )
+            const response = await this.$axios.post(
+              '/api/wallet/add/execute/',
+              {
+                paymentID: data.paymentID,
+                payerID: data.payerID,
+                money: this.moneyAdd,
+              }
             )
+            if (response.data.status === 'success') {
+              const money = parseFloat(
+                response.data.order.reduce(
+                  (total, unit) => total + unit.amount.total,
+                  0
+                )
+              )
+              this.$store.commit('addCoins', money)
+              this.paidFor = true
+            }
           },
-          onError: (err) => {
-            console.log(err)
+          onError: (error) => {
+            alert(error)
           },
         })
         .render(this.$refs.paypal)
@@ -119,7 +122,7 @@ export default {
       return number
     },
     addMoney(money) {
-      this.moneyText = money
+      this.moneyAdd.money = money
     },
   },
 }

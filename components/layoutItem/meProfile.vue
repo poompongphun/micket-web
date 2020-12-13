@@ -1,6 +1,8 @@
 <template>
   <div>
-    <v-btn color="success" rounded depressed small>100</v-btn>
+    <v-btn color="bgIcon" rounded depressed small to="/wallet">
+      ${{ $store.getters.loggedInUser.coins }}
+    </v-btn>
     <v-menu
       :close-on-content-click="false"
       offset-x

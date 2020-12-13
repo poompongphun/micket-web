@@ -64,8 +64,8 @@
                       </v-col>
                       <v-col cols="6" class="text-right">
                         <h2 class="success--text">90% off</h2>
-                        <s class="grey--text">฿100.00</s>
-                        <span>฿10.00</span>
+                        <s class="grey--text">$100.00</s>
+                        <span>$10.00</span>
                         <div></div>
                         <v-btn class="pa-5" color="success" rounded depressed>
                           Buy Pack

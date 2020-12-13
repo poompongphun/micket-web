@@ -16,7 +16,7 @@
               class="py-1 px-3 white--text rounded-l-lg font-weight-bold"
               style="background-color: rgba(0, 0, 0, 0.4)"
             >
-              ฿{{ movieDetail.price }}
+              ${{ movieDetail.price }}
             </span>
           </div>
         </v-img>
