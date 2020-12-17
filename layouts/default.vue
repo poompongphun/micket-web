@@ -3,7 +3,10 @@
     <v-app-bar color="navbar" app clipped-left flat>
       <v-app-bar-nav-icon @click.stop="showDrawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Micket</v-toolbar-title>
+      <v-app-bar-nav-icon class="mx-2">
+        <v-img :src="require('~/assets/logo/Micket.svg')" width="50"></v-img>
+      </v-app-bar-nav-icon>
+      <v-toolbar-title class="font-weight-bold">Micket</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
