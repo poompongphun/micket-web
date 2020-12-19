@@ -3,12 +3,32 @@
     <v-app-bar color="navbar" app clipped-left flat>
       <v-app-bar-nav-icon @click.stop="showDrawer"></v-app-bar-nav-icon>
 
-      <v-app-bar-nav-icon class="mx-2">
-        <v-img :src="require('~/assets/logo/Micket.svg')" width="50"></v-img>
-      </v-app-bar-nav-icon>
-      <v-toolbar-title class="font-weight-bold">Micket</v-toolbar-title>
+      <v-btn class="text-capitalize no-active" text rounded to="/">
+        <v-img
+          class="mr-2"
+          :src="require('~/assets/logo/Micket.svg')"
+          width="50"
+        ></v-img>
+        <v-toolbar-title
+          v-if="!$vuetify.breakpoint.xsOnly"
+          class="font-weight-bold"
+        >
+          Micket
+        </v-toolbar-title>
+      </v-btn>
 
       <v-spacer></v-spacer>
+
+      <v-btn
+        class="no-active"
+        color="iconBg"
+        rounded
+        depressed
+        small
+        to="/wallet"
+      >
+        ${{ $store.getters.loggedInUser.coins }}
+      </v-btn>
 
       <meProfile v-if="this.$store.state.auth.loggedIn" />
 
@@ -45,7 +65,7 @@
     </v-row>
 
     <v-main v-else>
-      <v-container fluid>
+      <v-container>
         <nuxt />
       </v-container>
       <!-- <v-footer padless>

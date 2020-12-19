@@ -22,6 +22,10 @@
   background: rgb(121, 121, 121);
 }
 
+.no-active.v-btn--active::before {
+  display: none;
+}
+
 .custom-container {
   position: relative;
   width: 100%;

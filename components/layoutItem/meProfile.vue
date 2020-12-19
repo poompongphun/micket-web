@@ -1,11 +1,9 @@
 <template>
   <div>
-    <v-btn color="bgIcon" rounded depressed small to="/wallet">
-      ${{ $store.getters.loggedInUser.coins }}
-    </v-btn>
     <v-menu
       :close-on-content-click="false"
       offset-x
+      min-width="280"
       transition="slide-x-reverse-transition"
     >
       <template v-slot:activator="{ on, attrs }">
@@ -25,9 +23,9 @@
 
             <v-list-item-content>
               <v-list-item-title>{{ meName.toUpperCase() }}</v-list-item-title>
-              <v-list-item-subtitle
-                >Hello, I'm {{ meName }}</v-list-item-subtitle
-              >
+              <v-list-item-subtitle v-if="meName !== meUsername">
+                {{ meUsername }}
+              </v-list-item-subtitle>
             </v-list-item-content>
 
             <v-list-item-action>
@@ -87,7 +85,7 @@ export default {
       profileImg:
         'https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png',
       meName: this.$store.getters.loggedInUser.name,
-
+      meUsername: this.$store.getters.loggedInUser.username,
       darkMode: false,
     }
   },
