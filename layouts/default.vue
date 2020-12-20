@@ -4,14 +4,10 @@
       <v-app-bar-nav-icon @click.stop="showDrawer"></v-app-bar-nav-icon>
 
       <v-btn class="text-capitalize no-active" text rounded to="/">
-        <v-img
-          class="mr-2"
-          :src="require('~/assets/logo/Micket.svg')"
-          width="50"
-        ></v-img>
+        <v-img :src="require('~/assets/logo/Micket.svg')" width="50"></v-img>
         <v-toolbar-title
           v-if="!$vuetify.breakpoint.xsOnly"
-          class="font-weight-bold"
+          class="font-weight-bold ml-2"
         >
           Micket
         </v-toolbar-title>

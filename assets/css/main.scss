@@ -40,6 +40,14 @@
   src: url('~assets/fonts/Kanit/Kanit-Bold.ttf') format('truetype');
 }
 
+@font-face {
+  font-family: 'BungeeOutline';
+  font-style: bold;
+  font-weight: 700;
+  font-display: swap;
+  src: url('~assets/fonts/BungeeOutline/BungeeOutline-Regular.ttf') format('truetype');
+}
+
 .v-application {
   font-family: 'Quicksand Bold', 'Kanit Medium', sans-serif !important;
 }
