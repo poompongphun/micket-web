@@ -1,0 +1,71 @@
+@font-face {
+  font-family: 'Righteous';
+  font-style: bold;
+  font-weight: 5000;
+  font-display: swap;
+  src: url('~assets/fonts/Righteous/Righteous-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Quicksand Medium';
+  font-style: medium;
+  font-weight: 500;
+  font-display: swap;
+  src: url('~assets/fonts/Quicksand/Quicksand-VariableFont_wght.ttf')
+    format('truetype');
+}
+
+@font-face {
+  font-family: 'Quicksand Bold';
+  font-style: bold;
+  font-weight: 700;
+  font-display: swap;
+  src: url('~assets/fonts/Quicksand/Quicksand-VariableFont_wght.ttf')
+    format('truetype');
+}
+
+@font-face {
+  font-family: 'Kanit Medium';
+  font-style: medium;
+  font-weight: 500;
+  font-display: swap;
+  src: url('~assets/fonts/Kanit/Kanit-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Kanit Bold';
+  font-style: bold;
+  font-weight: 700;
+  font-display: swap;
+  src: url('~assets/fonts/Kanit/Kanit-Bold.ttf') format('truetype');
+}
+
+.v-application {
+  font-family: 'Quicksand Bold', 'Kanit Medium', sans-serif !important;
+}
+
+.v-toolbar__title {
+  font-family: 'Righteous', sans-serif !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  // background: #00000071;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: rgb(90, 90, 90);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(121, 121, 121);
+}

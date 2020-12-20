@@ -24,9 +24,26 @@
         </v-btn>
       </v-list-item>
       <v-divider v-if="$vuetify.breakpoint.smAndDown" class="mb-3"></v-divider>
+
+      <v-list-item
+        v-if="$store.state.auth.loggedIn"
+        v-show="$store.getters.loggedInUser.creator"
+        color="primary"
+        link
+        to="/mystore"
+      >
+        <v-list-item-icon>
+          <v-icon>mdi-briefcase</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>My Store</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
       <v-list-item
         v-for="item in items"
         :key="item.title"
+        color="primary"
         link
         :to="item.links"
       >

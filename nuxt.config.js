@@ -18,7 +18,7 @@ export default {
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
-  css: ['~/assets/css/stylesheet.scss'],
+  css: ['~/assets/css/main.scss', '~/assets/css/stylesheet.scss'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [],
@@ -127,4 +127,5 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
+  loading: '~/components/loading.vue',
 }

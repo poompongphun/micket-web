@@ -64,6 +64,7 @@
 
 <script>
 export default {
+  loading: false,
   data() {
     return {
       signIn: false,
