@@ -4,7 +4,12 @@ export const state = () => ({
 
 export const mutations = {
   addCoins(state, coins) {
-    state.auth.user.coins += coins
+    const addedCoins = state.auth.user.coins + coins
+    state.auth.user.coins = addedCoins
+  },
+  useCoins(state, coins) {
+    const usedCoins = state.auth.user.coins - coins
+    state.auth.user.coins = usedCoins.toFixed(2)
   },
 }
 
