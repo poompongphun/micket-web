@@ -21,7 +21,7 @@ export default {
   css: ['~/assets/css/main.scss', '~/assets/css/stylesheet.scss'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [],
+  plugins: [{ src: '~/plugins/vue-plyr', mode: 'client' }],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
@@ -104,6 +104,7 @@ export default {
           normalText: colors.white,
           navbar: '#202020',
           iconBg: colors.grey.darken3,
+          defaultBg: '#121212',
         },
         light: {
           primary: colors.blue,
@@ -116,6 +117,7 @@ export default {
           normalText: '#444',
           navbar: '#F9F9F9',
           iconBg: colors.grey.lighten3,
+          defaultBg: colors.white,
         },
       },
     },
