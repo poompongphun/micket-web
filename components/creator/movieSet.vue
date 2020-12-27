@@ -1,0 +1,253 @@
+<template>
+  <div>
+    <v-hover v-slot="{ hover }">
+      <v-card v-ripple="$vuetify.breakpoint.smAndDown && !hover">
+        <v-row no-gutters>
+          <v-col cols="12" md="5">
+            <v-card
+              class="elevation-0"
+              height="100%"
+              width="100%"
+              color="iconBg"
+            >
+              <v-img
+                height="100%"
+                width="100%"
+                :aspect-ratio="27 / 40"
+                :src="movieData.poster.y"
+              >
+                <v-expand-transition>
+                  <div
+                    v-if="hover && $vuetify.breakpoint.smAndDown"
+                    class="d-flex transition-fast-in-fast-out v-card--reveal white--text"
+                    style="height: 100%"
+                  >
+                    <div
+                      class="background darken-2 iconBg"
+                      style="height: 100%"
+                    ></div>
+                    <div class="pa-1 item">
+                      <v-btn
+                        class="mb-1"
+                        color="iconBg"
+                        depressed
+                        block
+                        :small="$vuetify.breakpoint.xs"
+                      >
+                        <v-icon left>mdi-storefront</v-icon>
+                        Store
+                      </v-btn>
+                      <v-btn
+                        class="mb-1"
+                        color="iconBg"
+                        depressed
+                        block
+                        :small="$vuetify.breakpoint.xs"
+                      >
+                        <v-icon left>mdi-upload</v-icon>
+                        Upload
+                      </v-btn>
+                      <v-btn
+                        v-if="movieData.public"
+                        class="mb-1"
+                        color="iconBg"
+                        depressed
+                        block
+                        :small="$vuetify.breakpoint.xs"
+                      >
+                        <v-icon left>mdi-lock</v-icon>
+                        Private
+                      </v-btn>
+                      <v-btn
+                        v-else
+                        class="mb-1"
+                        color="iconBg"
+                        depressed
+                        block
+                        :small="$vuetify.breakpoint.xs"
+                      >
+                        <v-icon left>mdi-earth</v-icon>
+                        Public
+                      </v-btn>
+                      <v-btn
+                        class="mb-1"
+                        color="iconBg"
+                        depressed
+                        block
+                        :small="$vuetify.breakpoint.xs"
+                        @click="editMovie"
+                      >
+                        <v-icon left>mdi-pencil</v-icon>
+                        Edit
+                      </v-btn>
+                      <v-btn
+                        color="iconBg"
+                        depressed
+                        block
+                        :small="$vuetify.breakpoint.xs"
+                        @click="deleteMovie"
+                      >
+                        <v-icon left>mdi-trash-can</v-icon>
+                        Delete
+                      </v-btn>
+                    </div>
+                  </div>
+                </v-expand-transition>
+              </v-img>
+            </v-card>
+            <v-icon
+              v-if="movieData.public"
+              class="status-icon"
+              color="success"
+              small
+            >
+              mdi-earth
+            </v-icon>
+            <v-icon v-else class="status-icon" color="red" small>
+              mdi-lock
+            </v-icon>
+          </v-col>
+          <v-col v-if="!$vuetify.breakpoint.smAndDown" cols="0" md="7">
+            <v-card
+              class="d-flex align-start flex-column elevation-0"
+              height="100%"
+            >
+              <div class="pt-2 pl-2 pr-1 pb-1" style="width: 100%">
+                <h3
+                  class="font-weight-bold text-uppercase mt-1 primary--text text-truncate"
+                  style="display: inline-block; width: 70%"
+                >
+                  {{ movieData.title }}
+                </h3>
+                <v-menu
+                  offset-x
+                  bottom
+                  left
+                  transition="slide-x-reverse-transition"
+                  min-width="160"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      class="float-right"
+                      color="grey"
+                      top
+                      icon
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      <v-icon>mdi-dots-horizontal</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-list dense>
+                    <v-list-item @click="editMovie">
+                      <v-icon class="mr-3">mdi-pencil</v-icon>
+                      <v-list-item-title>Edit</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="deleteMovie">
+                      <v-icon class="mr-3">mdi-trash-can</v-icon>
+                      <v-list-item-title>Delete</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </div>
+              <div
+                class="px-1 overflow-hidden normalText--text"
+                :style="`width: 100%; font-size:0.9rem; height: ${
+                  $vuetify.breakpoint.mdAndDown ? '70px' : '125px'
+                }`"
+              >
+                {{ movieData.description }}
+              </div>
+              <div class="px-1 pb-1 mt-auto">
+                <v-btn
+                  class="pa-0"
+                  text
+                  depressed
+                  min-width="0"
+                  min-height="0"
+                  width="40"
+                  height="40"
+                >
+                  <v-icon>mdi-storefront</v-icon>
+                </v-btn>
+                <v-btn
+                  class="pa-0"
+                  text
+                  depressed
+                  min-width="0"
+                  min-height="0"
+                  width="40"
+                  height="40"
+                >
+                  <v-icon>mdi-upload</v-icon>
+                </v-btn>
+                <v-btn
+                  class="pa-0"
+                  text
+                  depressed
+                  min-width="0"
+                  min-height="0"
+                  width="40"
+                  height="40"
+                >
+                  <v-icon>
+                    {{ movieData.public ? 'mdi-lock' : 'mdi-earth' }}
+                  </v-icon>
+                </v-btn>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-hover>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    movieData: {
+      type: Object,
+      required: true,
+    },
+  },
+  methods: {
+    editMovie() {
+      console.log('edit movie')
+    },
+    deleteMovie() {
+      console.log('delete Movie')
+    },
+    clickMoblie() {
+      console.log('mobile')
+    },
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+.status-icon {
+  position: absolute;
+  top: 0;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+.v-card--reveal {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  .background {
+    opacity: 0.8;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+  }
+  .item {
+    width: 100%;
+  }
+}
+</style>
