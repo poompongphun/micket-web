@@ -1,7 +1,7 @@
 <template>
   <v-app v-if="loading" class="loading-page">
     <v-row v-if="loading" class="fill-height" justify="center" align="center">
-      <div class="text-center navbar py-10 px-15 rounded-xl">
+      <div class="text-center py-10 px-15 rounded-xl">
         <v-progress-circular
           :size="80"
           :width="7"
