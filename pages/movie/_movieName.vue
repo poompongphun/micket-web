@@ -98,15 +98,14 @@
     </v-row>
     <v-divider class="py-2"></v-divider>
     <h2>Trailer</h2>
-    <iframe
-      width="400"
-      height="225"
-      src="https://www.youtube.com/embed/p_PJbmrX4uk"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
-    ></iframe>
-    {{ $route.params.movieName }}
+    <v-responsive :aspect-ratio="16 / 9" width="300">
+      <vue-plyr>
+        <div
+          data-plyr-provider="youtube"
+          data-plyr-embed-id="p_PJbmrX4uk"
+        ></div>
+      </vue-plyr>
+    </v-responsive>
   </div>
 </template>
 
