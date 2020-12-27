@@ -29,7 +29,7 @@
             </v-list-item-content>
 
             <v-list-item-action>
-              <v-btn icon>
+              <v-btn icon @click="editProfile">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </v-list-item-action>
@@ -66,20 +66,18 @@
             <v-list-item-title>Logout</v-list-item-title>
           </v-list-item>
         </v-list>
-
-        <v-card-actions>
-          <!-- <v-spacer></v-spacer>
-
-        <v-btn text @click="menu = false"> Cancel </v-btn>
-        <v-btn color="primary" text @click="menu = false"> Save </v-btn> -->
-        </v-card-actions>
       </v-card>
     </v-menu>
+    <editProfile ref="editProfile" />
   </div>
 </template>
 
 <script>
+import editProfile from '@/components/profile/editProfile'
 export default {
+  components: {
+    editProfile,
+  },
   data() {
     return {
       profileImg:
@@ -97,6 +95,9 @@ export default {
   methods: {
     async logout() {
       await this.$auth.logout()
+    },
+    editProfile() {
+      this.$refs.editProfile.openDialog()
     },
   },
 }
