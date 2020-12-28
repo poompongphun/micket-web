@@ -2,7 +2,12 @@
   <div>
     <div v-if="movie.length !== 0">
       <h1>My Store</h1>
-      <v-tabs v-model="tab" class="mb-2" background-color="defaultBg">
+      <v-tabs
+        v-model="tab"
+        class="mb-2"
+        background-color="defaultBg"
+        mobile-breakpoint="0"
+      >
         <v-tab>
           <v-icon left>mdi-movie</v-icon>
           All
@@ -27,7 +32,7 @@
           sm="3"
           md="4"
         >
-          <movie :movie-data="movies" />
+          <movie :movie-data="movies" @upload-click="uploadMovie" />
         </v-col>
       </v-row>
       <v-fab-transition>
@@ -38,7 +43,7 @@
           bottom
           right
           fab
-          large
+          :large="$vuetify.breakpoint.smAndUp"
           @click.stop="createMovie"
         >
           <v-icon>mdi-plus</v-icon>
@@ -74,16 +79,19 @@
       </v-img>
     </div>
     <createMovieDialog ref="createMovieDialog" @newdata="newMovie" />
+    <uploadMovieDialog ref="uploadMovieDialog" />
   </div>
 </template>
 
 <script>
 import movie from '@/components/creator/movieSet'
 import createMovieDialog from '@/components/creator/createMovieDialog'
+import uploadMovieDialog from '@/components/creator/uploadMovieDialog'
 export default {
   components: {
     movie,
     createMovieDialog,
+    uploadMovieDialog,
   },
   validate({ store }) {
     return store.getters.loggedInUser.creator
@@ -226,6 +234,9 @@ export default {
     },
     newMovie(val) {
       this.movie.unshift(val)
+    },
+    uploadMovie() {
+      this.$refs.uploadMovieDialog.open()
     },
   },
 }
