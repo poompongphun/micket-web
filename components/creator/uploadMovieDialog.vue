@@ -19,7 +19,7 @@
           <v-tab v-for="(item, i) in items" :key="i">
             {{ item.text }}
             <v-icon
-              v-if="item.movie.length === 0"
+              v-if="item.movie.length === 0 && tab !== 0"
               right
               small
               @click="closeTab(i)"
@@ -53,6 +53,15 @@
                 >
                   <!-- Show Movie -->
                   <v-card elevation="0">
+                    <!-- Public / Private Icon -->
+                    <div class="status-icon">
+                      <v-icon v-if="movie.public" color="success" small>
+                        mdi-earth
+                      </v-icon>
+                      <v-icon v-else color="red" small> mdi-lock </v-icon>
+                      <span class="white--text">${{ movie.price }}</span>
+                    </div>
+                    <!-- Menu -->
                     <v-menu
                       offset-x
                       bottom
@@ -77,8 +86,24 @@
                           <v-icon>mdi-dots-horizontal</v-icon>
                         </v-btn>
                       </template>
+                      <!-- Menu List -->
                       <v-list dense>
-                        <v-list-item @click="editMovie">
+                        <v-list-item
+                          v-if="movie.public"
+                          @click="makePrivate(i, movie.id)"
+                        >
+                          <v-icon class="mr-3">mdi-lock</v-icon>
+                          <v-list-item-title>Private</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item v-else @click="makePublic(i, movie.id)">
+                          <v-icon class="mr-3">mdi-earth</v-icon>
+                          <v-list-item-title>Public</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="editPrice(i, movie.id)">
+                          <v-icon class="mr-3">mdi-cash-usd</v-icon>
+                          <v-list-item-title>Price</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="editMovie(i, movie.id)">
                           <v-icon class="mr-3">mdi-pencil</v-icon>
                           <v-list-item-title>Edit</v-list-item-title>
                         </v-list-item>
@@ -89,6 +114,7 @@
                       </v-list>
                     </v-menu>
                     <v-card>
+                      <!-- Video -->
                       <v-responsive :aspect-ratio="16 / 9">
                         <vue-plyr :options="options">
                           <video
@@ -129,6 +155,7 @@
             </v-card>
           </v-tab-item>
         </v-tabs-items>
+        <!-- Input Video -->
         <input
           ref="inputMovie"
           class="d-none"
@@ -211,6 +238,7 @@ export default {
         },
       ]
     },
+    // Add new Season
     newSeason() {
       this.items.push({
         id: this.items.length,
@@ -220,14 +248,17 @@ export default {
       })
       this.tab = this.items.length - 1
     },
+    // Close Tab
     closeTab(index) {
       console.log(index)
       this.items.splice(index, 1)
       console.log(this.items)
     },
+    // Click to Upload
     clickUpload() {
       this.$refs.inputMovie.click()
     },
+    // Upload Video
     async uploadMovie(e) {
       const index = this.tab
       const file = e.target.files[0]
@@ -241,6 +272,7 @@ export default {
           description:
             'this is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is description',
           price: 200,
+          reduce: 0,
           thumbnail: URL.createObjectURL(cover),
           video: {
             url: URL.createObjectURL(file),
@@ -251,13 +283,28 @@ export default {
         })
       }
     },
-    editMovie() {},
+    makePublic(ss, id) {
+      const MovieIndex = this.items[ss].movie.findIndex(
+        (movie) => movie.id === id
+      )
+      this.items[ss].movie[MovieIndex].public = true
+    },
+    makePrivate(ss, id) {
+      const MovieIndex = this.items[ss].movie.findIndex(
+        (movie) => movie.id === id
+      )
+      this.items[ss].movie[MovieIndex].public = false
+    },
+    editPrice(ss, id) {},
+    editMovie(ss, id) {},
+    // Delete Movie
     deleteMovie(ss, id) {
       const MovieIndex = this.items[ss].movie.findIndex(
         (movie) => movie.id === id
       )
       this.items[ss].movie.splice(MovieIndex, 1)
     },
+    // Get Video Thumbnails
     getVideoCover(file, seekTo = 0.0) {
       //   console.log('getting video cover for file: ', file)
       return new Promise((resolve, reject) => {
@@ -306,3 +353,15 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.status-icon {
+  position: absolute !important;
+  top: 0;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom-right-radius: 5px;
+  border-top-left-radius: 5px;
+  z-index: 1;
+}
+</style>
