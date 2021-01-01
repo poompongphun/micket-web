@@ -14,7 +14,8 @@
                 height="100%"
                 width="100%"
                 :aspect-ratio="27 / 40"
-                :src="movieData.poster.y"
+                :lazy-src="require('~/assets/logo/Micket.svg')"
+                :src="`${imgUrl}/${movieData._id}/y?size=sm`"
               >
                 <v-expand-transition>
                   <div
@@ -55,6 +56,7 @@
                         depressed
                         block
                         :small="$vuetify.breakpoint.xs"
+                        @click="makePrivate(movieData._id)"
                       >
                         <v-icon left>mdi-lock</v-icon>
                         Private
@@ -66,6 +68,7 @@
                         depressed
                         block
                         :small="$vuetify.breakpoint.xs"
+                        @click="makePublic(movieData._id)"
                       >
                         <v-icon left>mdi-earth</v-icon>
                         Public
@@ -86,7 +89,7 @@
                         depressed
                         block
                         :small="$vuetify.breakpoint.xs"
-                        @click="deleteMovie"
+                        @click="deleteMovie(movieData._id)"
                       >
                         <v-icon left>mdi-trash-can</v-icon>
                         Delete
@@ -144,7 +147,7 @@
                       <v-icon class="mr-3">mdi-pencil</v-icon>
                       <v-list-item-title>Edit</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="deleteMovie">
+                    <v-list-item @click="deleteMovie(movieData._id)">
                       <v-icon class="mr-3">mdi-trash-can</v-icon>
                       <v-list-item-title>Delete</v-list-item-title>
                     </v-list-item>
@@ -191,6 +194,11 @@
                   min-height="0"
                   width="40"
                   height="40"
+                  @click="
+                    movieData.public
+                      ? makePrivate(movieData._id)
+                      : makePublic(movieData._id)
+                  "
                 >
                   <v-icon>
                     {{ movieData.public ? 'mdi-lock' : 'mdi-earth' }}
@@ -213,15 +221,38 @@ export default {
       required: true,
     },
   },
+  data: () => ({
+    imgUrl: `${process.env.baseURL}/api/creator/movie-group/poster`,
+  }),
   methods: {
     editMovie() {
       console.log('edit movie')
     },
-    deleteMovie() {
-      console.log('delete Movie')
+    async deleteMovie(id) {
+      try {
+        const response = await this.$axios.$delete(
+          `/api/creator/movie-group/${id}`
+        )
+        if (response) {
+          this.$emit('delete', id)
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
-    clickMoblie() {
-      console.log('mobile')
+    async makePublic(id) {
+      const response = await this.$axios.patch(
+        `/api/creator/movie-group/${id}`,
+        { public: true }
+      )
+      this.movieData.public = response.data.public
+    },
+    async makePrivate(id) {
+      const response = await this.$axios.patch(
+        `/api/creator/movie-group/${id}`,
+        { public: false }
+      )
+      this.movieData.public = response.data.public
     },
   },
 }

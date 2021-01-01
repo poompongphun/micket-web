@@ -20,7 +20,7 @@ export default {
     price: 0,
   }),
   async mounted() {
-    const response = await this.$axios.get('/api/creator/join-price')
+    const response = await this.$axios.get('/api/creator/join/price')
     this.price = response.data.price
   },
   methods: {

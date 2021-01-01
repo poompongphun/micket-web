@@ -61,9 +61,12 @@
                       width="100%"
                       :aspect-ratio="27 / 40"
                       contain
-                      :src="vImg"
+                      :src="vImg.preview"
                     >
-                      <div v-if="vImg === ''" class="d-flex center-in-img">
+                      <div
+                        v-if="vImg.preview === ''"
+                        class="d-flex center-in-img"
+                      >
                         <div class="text-center">
                           <v-icon large>mdi-file-image</v-icon>
                           <br />
@@ -78,7 +81,7 @@
                           color="iconBg"
                           x-small
                           style="opacity: 0.7"
-                          @click="vImg = ''"
+                          @click="vImg.preview = ''"
                         >
                           <v-icon>mdi-close</v-icon>
                         </v-btn>
@@ -86,7 +89,7 @@
                     </v-img>
                   </v-responsive>
                   <div
-                    v-if="vImg === ''"
+                    v-if="vImg.preview === ''"
                     class="d-flex iconBg darken-2 v-card--reveal white--text"
                     :class="{ 'on-hover': hover }"
                     style="height: 100%; margin-left: -8px"
@@ -122,9 +125,12 @@
                       width="100%"
                       :aspect-ratio="16 / 9"
                       contain
-                      :src="hImg"
+                      :src="hImg.preview"
                     >
-                      <div v-if="hImg === ''" class="d-flex center-in-img">
+                      <div
+                        v-if="hImg.preview === ''"
+                        class="d-flex center-in-img"
+                      >
                         <div class="text-center">
                           <v-icon large>mdi-image-area</v-icon>
                           <br />
@@ -139,7 +145,7 @@
                           color="iconBg"
                           x-small
                           style="opacity: 0.7"
-                          @click="hImg = ''"
+                          @click="hImg.preview = ''"
                         >
                           <v-icon>mdi-close</v-icon>
                         </v-btn>
@@ -147,7 +153,7 @@
                     </v-img>
                   </v-responsive>
                   <div
-                    v-if="hImg === ''"
+                    v-if="hImg.preview === ''"
                     class="d-flex iconBg darken-2 v-card--reveal white--text"
                     :class="{ 'on-hover': hover }"
                     style="height: 100%"
@@ -169,6 +175,18 @@
             </v-col>
           </v-row>
         </v-form>
+        <v-alert
+          v-show="alertError && !loading"
+          v-model="alertError"
+          width="100%"
+          type="error"
+          dense
+          dismissible
+          text
+          transition="scroll-y-transition"
+        >
+          {{ errors }}
+        </v-alert>
       </v-card-text>
 
       <v-card-actions>
@@ -223,8 +241,14 @@ export default {
     dialog: false,
     title: '',
     description: '',
-    vImg: '',
-    hImg: '',
+    vImg: {
+      file: '',
+      preview: '',
+    },
+    hImg: {
+      file: '',
+      preview: '',
+    },
 
     loading: false,
 
@@ -234,6 +258,9 @@ export default {
       vposter: '',
       hposter: '',
     },
+
+    alertError: false,
+    errors: '',
   }),
   computed: {
     titleErrors() {
@@ -254,12 +281,12 @@ export default {
       return errors
     },
     VposterError() {
-      if (this.vImg !== '') {
+      if (this.vImg.preview !== '') {
         return false
       } else return true
     },
     HposterError() {
-      if (this.hImg !== '') {
+      if (this.hImg.preview !== '') {
         return false
       } else return true
     },
@@ -276,21 +303,40 @@ export default {
     },
     onFilePickedV(e) {
       const fileV = e.target.files[0]
-      if (fileV) this.vImg = URL.createObjectURL(fileV)
+      if (!this.checkFile(fileV)) {
+        this.error.vposter = 'Allow jpeg,jpg,png,tiff,gif,bmp,webp Only!'
+        this.vError = true
+      } else if (fileV) {
+        this.error.vposter = ''
+        this.vError = false
+
+        this.vImg.file = fileV
+        this.vImg.preview = URL.createObjectURL(fileV)
+      }
     },
     onFilePickedH(e) {
       const fileH = e.target.files[0]
-      if (fileH) this.hImg = URL.createObjectURL(fileH)
+      if (!this.checkFile(fileH)) {
+        this.error.hposter = 'Allow jpeg,jpg,png,tiff,gif,bmp,webp Only!'
+        this.hError = true
+      } else if (fileH) {
+        this.error.hposter = ''
+        this.hError = false
+
+        this.hImg.file = fileH
+        this.hImg.preview = URL.createObjectURL(fileH)
+      }
     },
     checkImg() {
-      if (this.vImg === '') {
+      if (this.vImg.preview === '') {
         this.error.vposter = 'Please upload poster'
         this.vError = true
       } else {
         this.error.vposter = ''
         this.vError = false
       }
-      if (this.hImg === '') {
+
+      if (this.hImg.preview === '') {
         this.error.hposter = 'Please upload poster'
         this.hError = true
       } else {
@@ -298,7 +344,7 @@ export default {
         this.hError = false
       }
     },
-    submit() {
+    async submit() {
       this.loading = true
       this.$v.$touch()
       this.checkImg()
@@ -306,26 +352,66 @@ export default {
         const sendData = {
           title: this.title,
           description: this.description,
-          poster: {
-            y: this.vImg,
-            x: this.hImg,
-          },
         }
-        setTimeout(() => {
-          console.log(sendData)
-          this.loading = false
-          this.dialog = false
-          this.clear()
-          this.$emit('newdata', sendData)
-        }, 5000)
+        const posterX = this.hImg.file
+        const posterY = this.vImg.file
+
+        try {
+          const responseMovie = await this.$axios.post(
+            '/api/creator/movie-group/create',
+            sendData
+          )
+          await this.uploadPoster('posterX', posterX, responseMovie.data._id)
+          await this.uploadPoster('posterY', posterY, responseMovie.data._id)
+
+          setTimeout(() => {
+            this.loading = false
+            this.dialog = false
+            this.clear()
+            this.$emit('newdata', responseMovie.data)
+          }, 100)
+        } catch (error) {
+          this.alertError = true
+          this.errors = error.response.data
+        }
       }
     },
+    async uploadPoster(type, img, id) {
+      try {
+        const formData = new FormData()
+        formData.append('poster', img)
+        await this.$axios.$post(`/api/creator/upload/${type}/${id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          progress: false,
+        })
+      } catch (error) {
+        this.alertError = true
+        this.errors = error.response.data
+      }
+    },
+    checkFile(file) {
+      // Allowing file type
+      const allowedExtensions = /(\.jpeg|\.jpg|\.png|\.tiff|\.gif|\.bmp|\.webp)$/i
+      console.log(file)
+      if (allowedExtensions.exec(file.name)) {
+        return true
+      }
+      return false
+    },
     clear() {
-      this.$v.$reset()
       this.title = ''
       this.description = ''
-      this.vImg = ''
-      this.hImg = ''
+      this.vImg = {
+        file: '',
+        preview: '',
+      }
+      this.hImg = {
+        file: '',
+        preview: '',
+      }
+      this.$v.$reset()
     },
   },
 }

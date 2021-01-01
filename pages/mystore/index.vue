@@ -7,6 +7,7 @@
         class="mb-2"
         background-color="defaultBg"
         mobile-breakpoint="0"
+        show-arrows
       >
         <v-tab>
           <v-icon left>mdi-movie</v-icon>
@@ -24,17 +25,25 @@
       <!-- <div v-for="movies in isPublic" :key="movies._id">
       <movie :movie-data="movies" />
     </div> -->
-      <v-row dense>
-        <v-col
-          v-for="movies in isPublic"
-          :key="movies._id"
-          cols="4"
-          sm="3"
-          md="4"
-        >
-          <movie :movie-data="movies" @upload-click="uploadMovie" />
-        </v-col>
-      </v-row>
+      <v-tabs-items v-model="tab">
+        <v-tab-item v-for="i in 3" :key="i">
+          <v-row dense>
+            <v-col
+              v-for="movies in isPublic"
+              :key="movies._id"
+              cols="4"
+              sm="3"
+              md="4"
+            >
+              <movie
+                :movie-data="movies"
+                @upload-click="uploadMovie"
+                @delete="deletedGroup"
+              />
+            </v-col>
+          </v-row>
+        </v-tab-item>
+      </v-tabs-items>
       <v-fab-transition>
         <v-btn
           color="navbar primary--text lighten-1"
@@ -96,120 +105,9 @@ export default {
   validate({ store }) {
     return store.getters.loggedInUser.creator
   },
-  fetch() {
-    // const response = await this.$axios.get('/api/creator/movie')
-    // this.movie = response.data
-    this.movie = [
-      {
-        title: 'Avengure',
-        description: 'Hello World',
-        poster: {
-          y:
-            'https://cdn11.bigcommerce.com/s-ydriczk/images/stencil/original/products/88997/93196/Avengers-Endgame-Final-Style-Poster-buy-original-movie-posters-at-starstills__42370.1563973516.jpg?c=2',
-        },
-        public: true,
-      },
-      {
-        title: 'Joker',
-        description: 'are you joke?',
-        poster: {
-          y:
-            'https://creativereview.imgix.net/content/uploads/2019/12/joker_full.jpg?auto=compress,format&q=60&w=1012&h=1500',
-        },
-        public: false,
-      },
-      {
-        title: 'Avengure',
-        description: 'Hello World',
-        poster: {
-          y:
-            'https://cdn11.bigcommerce.com/s-ydriczk/images/stencil/original/products/88997/93196/Avengers-Endgame-Final-Style-Poster-buy-original-movie-posters-at-starstills__42370.1563973516.jpg?c=2',
-        },
-        public: true,
-      },
-      {
-        title: 'Joker',
-        description: 'are you joke?',
-        poster: {
-          y:
-            'https://creativereview.imgix.net/content/uploads/2019/12/joker_full.jpg?auto=compress,format&q=60&w=1012&h=1500',
-        },
-        public: false,
-      },
-      {
-        title: 'Avengure',
-        description: 'Hello World',
-        poster: {
-          y:
-            'https://cdn11.bigcommerce.com/s-ydriczk/images/stencil/original/products/88997/93196/Avengers-Endgame-Final-Style-Poster-buy-original-movie-posters-at-starstills__42370.1563973516.jpg?c=2',
-        },
-        public: true,
-      },
-      {
-        title: 'Joker',
-        description: 'are you joke?',
-        poster: {
-          y:
-            'https://creativereview.imgix.net/content/uploads/2019/12/joker_full.jpg?auto=compress,format&q=60&w=1012&h=1500',
-        },
-        public: false,
-      },
-      {
-        title: 'Avengure',
-        description: 'Hello World',
-        poster: {
-          y:
-            'https://cdn11.bigcommerce.com/s-ydriczk/images/stencil/original/products/88997/93196/Avengers-Endgame-Final-Style-Poster-buy-original-movie-posters-at-starstills__42370.1563973516.jpg?c=2',
-        },
-        public: true,
-      },
-      {
-        title: 'Joker',
-        description: 'are you joke?',
-        poster: {
-          y:
-            'https://creativereview.imgix.net/content/uploads/2019/12/joker_full.jpg?auto=compress,format&q=60&w=1012&h=1500',
-        },
-        public: false,
-      },
-      {
-        title: 'Avengure',
-        description: 'Hello World',
-        poster: {
-          y:
-            'https://cdn11.bigcommerce.com/s-ydriczk/images/stencil/original/products/88997/93196/Avengers-Endgame-Final-Style-Poster-buy-original-movie-posters-at-starstills__42370.1563973516.jpg?c=2',
-        },
-        public: true,
-      },
-      {
-        title: 'Joker',
-        description: 'are you joke?',
-        poster: {
-          y:
-            'https://creativereview.imgix.net/content/uploads/2019/12/joker_full.jpg?auto=compress,format&q=60&w=1012&h=1500',
-        },
-        public: false,
-      },
-      {
-        title: 'Avengure',
-        description: 'Hello World',
-        poster: {
-          y:
-            'https://cdn11.bigcommerce.com/s-ydriczk/images/stencil/original/products/88997/93196/Avengers-Endgame-Final-Style-Poster-buy-original-movie-posters-at-starstills__42370.1563973516.jpg?c=2',
-        },
-        public: true,
-      },
-      {
-        title: 'Jokeppppppppppppppppr',
-        description:
-          'are you jokessssssssssssssssssssssssssssssssssssssssssssjokessssssssssssssssssssssssssssssssssssssssssssjokessssssssssssssssssssssssssssssssssssssssssssjokessssssssssssssssssssssssssssssssssssssssssssjokessssssssssssssssssssssssssssssssssssssssssss?',
-        poster: {
-          y:
-            'https://creativereview.imgix.net/content/uploads/2019/12/joker_full.jpg?auto=compress,format&q=60&w=1012&h=1500',
-        },
-        public: false,
-      },
-    ]
+  async asyncData({ $axios }) {
+    const response = await $axios.get('/api/creator/movie-group/')
+    return { movie: response.data }
   },
   data: () => ({
     movie: [],
@@ -237,6 +135,10 @@ export default {
     },
     uploadMovie() {
       this.$refs.uploadMovieDialog.open()
+    },
+    deletedGroup(id) {
+      const index = this.movie.findIndex((movie) => movie._id === id)
+      this.movie.splice(index, 1)
     },
   },
 }
