@@ -361,15 +361,28 @@ export default {
             '/api/creator/movie-group/create',
             sendData
           )
-          await this.uploadPoster('posterX', posterX, responseMovie.data._id)
-          await this.uploadPoster('posterY', posterY, responseMovie.data._id)
+          const uploadPosterX = await this.uploadPoster(
+            'x',
+            posterX,
+            responseMovie.data._id
+          )
+          const uploadPosterY = await this.uploadPoster(
+            'y',
+            posterY,
+            responseMovie.data._id
+          )
 
-          setTimeout(() => {
-            this.loading = false
-            this.dialog = false
-            this.clear()
-            this.$emit('newdata', responseMovie.data)
-          }, 100)
+          if (uploadPosterX && uploadPosterY) {
+            responseMovie.data.poster.x = this.hImg.preview
+            responseMovie.data.poster.y = this.vImg.preview
+
+            setTimeout(() => {
+              this.loading = false
+              this.dialog = false
+              this.clear()
+              this.$emit('newdata', responseMovie.data)
+            }, 100)
+          }
         } catch (error) {
           this.alertError = true
           this.errors = error.response.data
@@ -380,15 +393,21 @@ export default {
       try {
         const formData = new FormData()
         formData.append('poster', img)
-        await this.$axios.$post(`/api/creator/upload/${type}/${id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          progress: false,
-        })
+        await this.$axios.$post(
+          `/api/creator/upload/poster/${id}/${type}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            progress: false,
+          }
+        )
+        return true
       } catch (error) {
         this.alertError = true
         this.errors = error.response.data
+        return false
       }
     },
     checkFile(file) {

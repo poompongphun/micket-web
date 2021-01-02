@@ -15,7 +15,7 @@
                 width="100%"
                 :aspect-ratio="27 / 40"
                 :lazy-src="require('~/assets/logo/Micket.svg')"
-                :src="imgUrl"
+                :src="movieData.poster.y"
               >
                 <v-expand-transition>
                   <div
@@ -221,15 +221,7 @@ export default {
       required: true,
     },
   },
-  async fetch() {
-    const response = await this.$axios.get(
-      `/api/creator/movie-group/poster/${this.movieData._id}/y?size=sm`
-    )
-    this.imgUrl = response.data.img
-  },
-  data: () => ({
-    imgUrl: '',
-  }),
+  data: () => ({}),
   methods: {
     editMovie() {
       console.log('edit movie')
