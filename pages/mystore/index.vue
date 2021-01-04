@@ -88,19 +88,16 @@
       </v-img>
     </div>
     <createMovieDialog ref="createMovieDialog" @newdata="newMovie" />
-    <uploadMovieDialog ref="uploadMovieDialog" />
   </div>
 </template>
 
 <script>
 import movie from '@/components/creator/movieSet'
 import createMovieDialog from '@/components/creator/createMovieDialog'
-import uploadMovieDialog from '@/components/creator/uploadMovieDialog'
 export default {
   components: {
     movie,
     createMovieDialog,
-    uploadMovieDialog,
   },
   validate({ store }) {
     return store.getters.loggedInUser.creator
@@ -132,9 +129,6 @@ export default {
     },
     newMovie(val) {
       this.movie.unshift(val)
-    },
-    uploadMovie(id) {
-      this.$refs.uploadMovieDialog.open(id)
     },
     deletedGroup(id) {
       const index = this.movie.findIndex((movie) => movie._id === id)
