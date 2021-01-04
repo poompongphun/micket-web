@@ -25,7 +25,7 @@
       <!-- <div v-for="movies in isPublic" :key="movies._id">
       <movie :movie-data="movies" />
     </div> -->
-      <v-tabs-items v-model="tab">
+      <v-tabs-items v-model="tab" class="defaultBg">
         <v-tab-item v-for="i in 3" :key="i">
           <v-row dense>
             <v-col
@@ -133,8 +133,8 @@ export default {
     newMovie(val) {
       this.movie.unshift(val)
     },
-    uploadMovie() {
-      this.$refs.uploadMovieDialog.open()
+    uploadMovie(id) {
+      this.$refs.uploadMovieDialog.open(id)
     },
     deletedGroup(id) {
       const index = this.movie.findIndex((movie) => movie._id === id)

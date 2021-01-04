@@ -1,0 +1,209 @@
+<template>
+  <div>
+    <h1>Upload to {{ movieGroup.title }}</h1>
+    <v-tabs
+      v-model="tab"
+      background-color="defaultBg"
+      show-arrows
+      mobile-breakpoint="0"
+    >
+      <v-tab v-for="(season, i) in movieSeason" :key="i">
+        {{ season.name }}
+        <v-icon
+          v-if="season.movie.length === 0 && tab !== 0"
+          right
+          small
+          @click="closeTab(i, season._id)"
+        >
+          mdi-close
+        </v-icon>
+      </v-tab>
+      <!-- Add Tab Btn -->
+      <v-btn
+        class="pa-6"
+        :disabled="movieSeason[movieSeason.length - 1].movie.length === 0"
+        color="primary"
+        icon
+        @click="newSeason(movieGroup._id)"
+      >
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </v-tabs>
+    <v-tabs-items v-model="tab" class="pt-3 defaultBg">
+      <v-tab-item v-for="(season, i) in movieSeason" :key="i">
+        <v-card class="defaultBg" flat>
+          <v-row dense>
+            <v-col
+              v-for="movie in season.movie"
+              :key="movie._id"
+              cols="12"
+              sm="4"
+              md="3"
+            >
+              <videoBlock
+                :movie="movie"
+                @publish="doPublish"
+                @delete="doDelete"
+              />
+            </v-col>
+            <v-col cols="12" sm="4" md="3">
+              <!-- Upload -->
+              <v-card
+                class="iconBg elevation-0"
+                @click="clickUpload(`inputMovie-${i}`)"
+              >
+                <v-responsive :aspect-ratio="16 / 9">
+                  <v-row class="fill-height" justify="center" align="center">
+                    <v-icon large>mdi-plus</v-icon>
+                  </v-row>
+                </v-responsive>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-card>
+        <!-- Input Video -->
+        <input
+          :ref="`inputMovie-${i}`"
+          class="d-none"
+          type="file"
+          accept="video/*"
+          @change="uploadMovie($event, movieGroup._id, season._id)"
+        />
+      </v-tab-item>
+    </v-tabs-items>
+  </div>
+</template>
+
+<script>
+import videoBlock from '@/components/creator/videoBlock'
+export default {
+  components: {
+    videoBlock,
+  },
+  async asyncData({ $axios, params }) {
+    const groupId = params.upload
+    const responseGroup = await $axios.get(
+      `/api/creator/movie-group/${groupId}`
+    )
+    const responseMovie = await $axios.get(`/api/creator/movie/${groupId}`)
+    return { movieGroup: responseGroup.data, movieSeason: responseMovie.data }
+  },
+  data: () => ({
+    movieGroup: null,
+    movieSeason: [],
+
+    tab: null,
+  }),
+  methods: {
+    // Add new Season
+    async newSeason(id) {
+      const responseSeason = await this.$axios.post(
+        `/api/creator/season/${id}`,
+        { name: `Season ${this.movieSeason.length + 1}` }
+      )
+      if (responseSeason) {
+        this.movieSeason.push(responseSeason.data)
+        this.tab = this.movieSeason.length - 1
+      }
+    },
+    // Close Tab
+    async closeTab(index, id) {
+      const responseSeason = await this.$axios.delete(
+        `/api/creator/season/${id}`
+      )
+      if (responseSeason) this.movieSeason.splice(index, 1)
+    },
+    doPublish(val) {
+      const MovieIndex = this.movieSeason[this.tab].movie.findIndex(
+        (movie) => movie._id === val.id
+      )
+      this.movieSeason[this.tab].movie[MovieIndex].public = val.publish
+    },
+    doDelete(id) {
+      const MovieIndex = this.movieSeason[this.tab].movie.findIndex(
+        (movie) => movie._id === id
+      )
+      this.movieSeason[this.tab].movie.splice(MovieIndex, 1)
+    },
+    // Click to Upload
+    clickUpload(ref) {
+      this.$refs[ref][0].click()
+    },
+    // Upload Video
+    async uploadMovie(e, groupId, seasonId) {
+      const index = this.tab
+      const file = e.target.files[0]
+      if (file) {
+        // const fileName = e.target.files[0].name
+        // const cover = await this.getVideoCover(file, 0)
+        const formData = new FormData()
+        formData.append('movie', e.target.files[0])
+        const uploadMovie = await this.$axios.$post(
+          `/api/creator/movie/${groupId}/${seasonId}`,
+          formData
+        )
+        this.movieSeason[index].movie.push(uploadMovie)
+      }
+    },
+
+    // Get Video Thumbnails
+    getVideoCover(file, seekTo = 0.0) {
+      //   console.log('getting video cover for file: ', file)
+      return new Promise((resolve, reject) => {
+        // load the file to a video player
+        const videoPlayer = document.createElement('video')
+        videoPlayer.setAttribute('src', URL.createObjectURL(file))
+        videoPlayer.load()
+        videoPlayer.addEventListener('error', (ex) => {
+          Promise.reject(new Error('error when loading video file'), ex)
+        })
+        // load metadata of the video to get video duration and dimensions
+        videoPlayer.addEventListener('loadedmetadata', () => {
+          //   seek to user defined timestamp (in seconds) if possible
+          //   if (videoPlayer.duration < seekTo) {
+          //     Promise.reject(new Error('video is too short.'))
+          //     return
+          //   }
+          // delay seeking or else 'seeked' event won't fire on Safari
+          setTimeout(() => {
+            videoPlayer.currentTime = Math.floor(
+              Math.random() * videoPlayer.duration
+            )
+          }, 200)
+          // extract video thumbnail once seeking is complete
+          videoPlayer.addEventListener('seeked', () => {
+            // console.log('video is now paused at %ss.', seekTo)
+            // define a canvas to have the same dimension as the video
+            const canvas = document.createElement('canvas')
+            canvas.width = videoPlayer.videoWidth
+            canvas.height = videoPlayer.videoHeight
+            // draw the video frame to canvas
+            const ctx = canvas.getContext('2d')
+            ctx.drawImage(videoPlayer, 0, 0, canvas.width, canvas.height)
+            // return the canvas image as a blob
+            ctx.canvas.toBlob(
+              (blob) => {
+                resolve(blob)
+              },
+              'image/jpeg',
+              0.75 /* quality */
+            )
+          })
+        })
+      })
+    },
+  },
+}
+</script>
+
+<style lang="scss">
+.status-icon {
+  position: absolute !important;
+  top: 0;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom-right-radius: 5px;
+  border-top-left-radius: 5px;
+  z-index: 1;
+}
+</style>

@@ -44,7 +44,7 @@
                         depressed
                         block
                         :small="$vuetify.breakpoint.xs"
-                        @click.stop="$emit('upload-click', true)"
+                        :to="`/mystore/${movieData._id}`"
                       >
                         <v-icon left>mdi-upload</v-icon>
                         Upload
@@ -182,7 +182,7 @@
                   min-height="0"
                   width="40"
                   height="40"
-                  @click.stop="$emit('upload-click', true)"
+                  :to="`/mystore/${movieData._id}`"
                 >
                   <v-icon>mdi-upload</v-icon>
                 </v-btn>

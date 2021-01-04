@@ -17,12 +17,12 @@
         <!-- Tab -->
         <v-tabs v-model="tab" show-arrows mobile-breakpoint="0">
           <v-tab v-for="(item, i) in items" :key="i">
-            {{ item.text }}
+            {{ item.name }}
             <v-icon
               v-if="item.movie.length === 0 && tab !== 0"
               right
               small
-              @click="closeTab(i)"
+              @click="closeTab(i, item._id)"
             >
               mdi-close
             </v-icon>
@@ -33,7 +33,7 @@
             :disabled="items[items.length - 1].movie.length === 0"
             color="primary"
             icon
-            @click="newSeason"
+            @click="newSeason(groupId)"
           >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
@@ -46,7 +46,7 @@
               <v-row dense>
                 <v-col
                   v-for="movie in item.movie"
-                  :key="movie.id"
+                  :key="movie._id"
                   cols="12"
                   sm="4"
                   md="3"
@@ -90,24 +90,24 @@
                       <v-list dense>
                         <v-list-item
                           v-if="movie.public"
-                          @click="makePrivate(i, movie.id)"
+                          @click="makePrivate(i, movie._id)"
                         >
                           <v-icon class="mr-3">mdi-lock</v-icon>
                           <v-list-item-title>Private</v-list-item-title>
                         </v-list-item>
-                        <v-list-item v-else @click="makePublic(i, movie.id)">
+                        <v-list-item v-else @click="makePublic(i, movie._id)">
                           <v-icon class="mr-3">mdi-earth</v-icon>
                           <v-list-item-title>Public</v-list-item-title>
                         </v-list-item>
-                        <v-list-item @click="editPrice(i, movie.id)">
+                        <v-list-item @click="editPrice(i, movie._id)">
                           <v-icon class="mr-3">mdi-cash-usd</v-icon>
                           <v-list-item-title>Price</v-list-item-title>
                         </v-list-item>
-                        <v-list-item @click="editMovie(i, movie.id)">
+                        <v-list-item @click="editMovie(i, movie._id)">
                           <v-icon class="mr-3">mdi-pencil</v-icon>
                           <v-list-item-title>Edit</v-list-item-title>
                         </v-list-item>
-                        <v-list-item @click="deleteMovie(i, movie.id)">
+                        <v-list-item @click="deleteMovie(i, movie._id)">
                           <v-icon class="mr-3">mdi-trash-can</v-icon>
                           <v-list-item-title>Delete</v-list-item-title>
                         </v-list-item>
@@ -121,11 +121,11 @@
                             previewThumbnails
                             controls
                             playsinline
-                            :data-poster="movie.thumbnail"
+                            :data-poster="movie.media.thumbnail"
                           >
                             <source
                               size="480"
-                              :src="movie.video.url"
+                              :src="movie.media.video"
                               type="video/mp4"
                             />
                           </video>
@@ -139,7 +139,10 @@
                 </v-col>
                 <v-col cols="12" sm="4" md="3">
                   <!-- Upload -->
-                  <v-card class="iconBg elevation-0" @click="clickUpload">
+                  <v-card
+                    class="iconBg elevation-0"
+                    @click="clickUpload(`inputMovie-${i}`)"
+                  >
                     <v-responsive :aspect-ratio="16 / 9">
                       <v-row
                         class="fill-height"
@@ -153,16 +156,16 @@
                 </v-col>
               </v-row>
             </v-card>
+            <!-- Input Video -->
+            <input
+              :ref="`inputMovie-${i}`"
+              class="d-none"
+              type="file"
+              accept="video/*"
+              @change="uploadMovie($event, groupId, item._id)"
+            />
           </v-tab-item>
         </v-tabs-items>
-        <!-- Input Video -->
-        <input
-          ref="inputMovie"
-          class="d-none"
-          type="file"
-          accept="video/*"
-          @change="uploadMovie"
-        />
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -173,6 +176,7 @@ export default {
   data: () => ({
     dialog: false,
     tab: null,
+    groupId: '',
     options: {
       ratio: '16:9',
       controls: ['play', 'progress', 'current-time'],
@@ -190,97 +194,52 @@ export default {
         edit: false,
         movie: [],
       },
-      //   { id: 2, text: 'Season 2', edit: false, movie: [] },
-      //   { id: 3, text: 'Season 3', edit: false, movie: [] },
-      //   { id: 4, text: 'Season 4', edit: false, movie: [] },
-      //   { id: 5, text: 'Season 5', edit: false, movie: [] },
     ],
   }),
-  //   watch: {
-  //     dialog(val) {
-  //       if (!val)
-  //         this.items = [
-  //           {
-  //             id: 1,
-  //             text: 'Season 1',
-  //             edit: false,
-  //             movie: [],
-  //           },
-  //         ]
-  //     },
-  //   },
   methods: {
-    open() {
+    async open(id) {
       this.dialog = true
-      this.items = [
-        {
-          id: 1,
-          text: 'Season 1',
-          edit: false,
-          movie: [
-            // {
-            //   id: 1,
-            //   name: 'EP:1 Wow',
-            //   description:
-            //     'this is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is description',
-            //   price: 200,
-            //   thumbnail:
-            //     'https://getuikit.com/v2/docs/images/placeholder_600x400.svg',
-            //   video: {
-            //     url:
-            //       'https://firebasestorage.googleapis.com/v0/b/micket-d452e.appspot.com/o/movie%2F1608820670018.webm?alt=media',
-            //     path: 'movie/1608820670018.webm',
-            //   },
-            //   public: false,
-            //   upload_date: '2020-12-24T14:37:36.328Z',
-            // },
-          ],
-        },
-      ]
+      this.groupId = id
+      const responseMovie = await this.$axios.get(`/api/creator/movie/${id}`)
+      console.log(responseMovie.data)
+      this.items = responseMovie.data
     },
     // Add new Season
-    newSeason() {
-      this.items.push({
-        id: this.items.length,
-        text: `Season ${this.items.length + 1}`,
-        edit: false,
-        movie: [],
-      })
-      this.tab = this.items.length - 1
+    async newSeason(id) {
+      const responseSeason = await this.$axios.post(
+        `/api/creator/season/${id}`,
+        { name: `Season ${this.items.length + 1}` }
+      )
+      if (responseSeason) {
+        this.items.push(responseSeason.data)
+        this.tab = this.items.length - 1
+      }
     },
     // Close Tab
-    closeTab(index) {
-      console.log(index)
-      this.items.splice(index, 1)
-      console.log(this.items)
+    async closeTab(index, id) {
+      const responseSeason = await this.$axios.delete(
+        `/api/creator/season/${id}`
+      )
+      if (responseSeason) this.items.splice(index, 1)
     },
     // Click to Upload
-    clickUpload() {
-      this.$refs.inputMovie.click()
+    clickUpload(ref) {
+      this.$refs[ref][0].click()
     },
     // Upload Video
-    async uploadMovie(e) {
+    async uploadMovie(e, groupId, seasonId) {
       const index = this.tab
       const file = e.target.files[0]
       if (file) {
-        const fileName = e.target.files[0].name
-        const cover = await this.getVideoCover(file, 0)
-
-        this.items[index].movie.push({
-          id: this.items[index].movie.length + 1,
-          name: fileName,
-          description:
-            'this is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is descriptionthis is description',
-          price: 200,
-          reduce: 0,
-          thumbnail: URL.createObjectURL(cover),
-          video: {
-            url: URL.createObjectURL(file),
-            path: 'movie/1608820670018.webm',
-          },
-          public: false,
-          upload_date: '2020-12-24T14:37:36.328Z',
-        })
+        // const fileName = e.target.files[0].name
+        // const cover = await this.getVideoCover(file, 0)
+        const formData = new FormData()
+        formData.append('movie', e.target.files[0])
+        const uploadMovie = await this.$axios.$post(
+          `/api/creator/movie/${groupId}/${seasonId}`,
+          formData
+        )
+        this.items[index].movie.push(uploadMovie)
       }
     },
     makePublic(ss, id) {
