@@ -35,11 +35,7 @@
               sm="3"
               md="4"
             >
-              <movie
-                :movie-data="movies"
-                @upload-click="uploadMovie"
-                @delete="deletedGroup"
-              />
+              <movie :movie-data="movies" @delete="deletedGroup" />
             </v-col>
           </v-row>
         </v-tab-item>

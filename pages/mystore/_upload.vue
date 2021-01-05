@@ -37,16 +37,58 @@
               v-for="movie in season.movie"
               :key="movie._id"
               cols="12"
-              sm="4"
-              md="3"
+              sm="6"
+              md="4"
+              lg="3"
+              xl="2"
             >
               <videoBlock
                 :movie="movie"
                 @publish="doPublish"
                 @delete="doDelete"
+                @edit="openEditMovie"
+                @play="playVideo"
               />
             </v-col>
-            <v-col cols="12" sm="4" md="3">
+            <v-col
+              v-for="upload in uploading"
+              :key="upload.id"
+              cols="12"
+              sm="6"
+              md="4"
+              lg="3"
+              xl="2"
+            >
+              <!-- Upload -->
+              <v-card class="iconBg elevation-0">
+                <v-img :aspect-ratio="16 / 9" :lazy-src="upload.img">
+                  <div class="d-flex center-in-img">
+                    <v-progress-circular
+                      class="mr-2"
+                      indeterminate
+                      color="primary"
+                      :size="50"
+                      :width="4"
+                    ></v-progress-circular>
+                  </div>
+                  <v-chip
+                    class="ma-1"
+                    color="primary"
+                    small
+                    style="position: absolute; bottom: 0px"
+                  >
+                    Uploading...
+                  </v-chip>
+                </v-img>
+              </v-card>
+              <h3
+                class="py-1 overflow-hidden"
+                style="height: 60px; font-size: 1.1rem"
+              >
+                {{ upload.name }}
+              </h3>
+            </v-col>
+            <v-col cols="12" sm="6" md="4" lg="3" xl="2">
               <!-- Upload -->
               <v-card
                 class="iconBg elevation-0"
@@ -71,45 +113,65 @@
         />
       </v-tab-item>
     </v-tabs-items>
+    <editMovieDialog ref="editMovieDialog" @update="updateMovie" />
+    <videoPlayer ref="videoPlayer" />
   </div>
 </template>
 
 <script>
 import videoBlock from '@/components/creator/videoBlock'
+import editMovieDialog from '@/components/creator/editMovieDialog'
+import videoPlayer from '@/components/creator/videoPlayer'
 export default {
   components: {
     videoBlock,
+    editMovieDialog,
+    videoPlayer,
+  },
+  async validate({ store, $axios, params }) {
+    const groupId = params.upload
+    const responseGroup = await $axios.$get(
+      `/api/creator/movie-group/${groupId}`
+    )
+    return store.getters.loggedInUser.creator && responseGroup
   },
   async asyncData({ $axios, params }) {
     const groupId = params.upload
-    const responseGroup = await $axios.get(
-      `/api/creator/movie-group/${groupId}`
+    const responseGroup = await $axios.$get(
+      `/api/creator/movie-group/${groupId}`,
+      { progress: false }
     )
-    const responseMovie = await $axios.get(`/api/creator/movie/${groupId}`)
-    return { movieGroup: responseGroup.data, movieSeason: responseMovie.data }
+    const responseMovie = await $axios.$get(
+      `/api/creator/movie/group/${groupId}`,
+      { progress: false }
+    )
+    return { movieGroup: responseGroup, movieSeason: responseMovie }
   },
   data: () => ({
     movieGroup: null,
     movieSeason: [],
 
     tab: null,
+    uploading: [],
   }),
   methods: {
     // Add new Season
     async newSeason(id) {
-      const responseSeason = await this.$axios.post(
+      const responseSeason = await this.$axios.$post(
         `/api/creator/season/${id}`,
-        { name: `Season ${this.movieSeason.length + 1}` }
+        { name: `Season ${this.movieSeason.length + 1}` },
+        { progress: false }
       )
       if (responseSeason) {
-        this.movieSeason.push(responseSeason.data)
+        this.movieSeason.push(responseSeason)
         this.tab = this.movieSeason.length - 1
       }
     },
     // Close Tab
     async closeTab(index, id) {
-      const responseSeason = await this.$axios.delete(
-        `/api/creator/season/${id}`
+      const responseSeason = await this.$axios.$delete(
+        `/api/creator/season/${id}`,
+        { progress: false }
       )
       if (responseSeason) this.movieSeason.splice(index, 1)
     },
@@ -119,11 +181,33 @@ export default {
       )
       this.movieSeason[this.tab].movie[MovieIndex].public = val.publish
     },
-    doDelete(id) {
+    async doDelete(id) {
+      try {
+        const responseDelete = await this.$axios.$delete(
+          `/api/creator/movie/${id}`,
+          { progress: false }
+        )
+        if (responseDelete) {
+          const MovieIndex = this.movieSeason[this.tab].movie.findIndex(
+            (movie) => movie._id === id
+          )
+          this.movieSeason[this.tab].movie.splice(MovieIndex, 1)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    openEditMovie(id) {
+      this.$refs.editMovieDialog.open(id)
+    },
+    updateMovie(val) {
+      const id = val.id
+      const movieUpdate = val.data
+      console.log(movieUpdate)
       const MovieIndex = this.movieSeason[this.tab].movie.findIndex(
         (movie) => movie._id === id
       )
-      this.movieSeason[this.tab].movie.splice(MovieIndex, 1)
+      this.movieSeason[this.tab].movie.splice(MovieIndex, 1, movieUpdate)
     },
     // Click to Upload
     clickUpload(ref) {
@@ -134,16 +218,61 @@ export default {
       const index = this.tab
       const file = e.target.files[0]
       if (file) {
-        // const fileName = e.target.files[0].name
-        // const cover = await this.getVideoCover(file, 0)
+        const cover = await this.getVideoCover(file, 0)
+        const tempId = Date.now()
+        this.uploading.push({
+          id: tempId,
+          name: file.name,
+          img: URL.createObjectURL(cover),
+        })
+
         const formData = new FormData()
         formData.append('movie', e.target.files[0])
         const uploadMovie = await this.$axios.$post(
           `/api/creator/movie/${groupId}/${seasonId}`,
-          formData
+          formData,
+          { progress: false }
         )
-        this.movieSeason[index].movie.push(uploadMovie)
+        const coverFile = new File([cover], 'cover.webp', {
+          type: 'image/webp',
+        })
+        const movieWithThumbnail = await this.uploadThumbnail(
+          coverFile,
+          uploadMovie._id
+        )
+        if (movieWithThumbnail && uploadMovie) {
+          const tempIndex = this.uploading.findIndex(
+            (upload) => upload.id === tempId
+          )
+          this.uploading.splice(tempIndex, 1)
+          this.movieSeason[index].movie.push(movieWithThumbnail)
+        } else this.movieSeason[index].movie.push(uploadMovie)
       }
+    },
+    async uploadThumbnail(file, id) {
+      const imgFile = file
+      if (imgFile) {
+        try {
+          const formData = new FormData()
+          formData.append('thumbnail', imgFile)
+          const response = await this.$axios.$post(
+            `/api/creator/upload/thumbnail/${id}`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+              progress: false,
+            }
+          )
+          return response
+        } catch (error) {
+          return false
+        }
+      }
+    },
+    playVideo(url) {
+      this.$refs.videoPlayer.play(url)
     },
 
     // Get Video Thumbnails
@@ -197,6 +326,14 @@ export default {
 </script>
 
 <style lang="scss">
+.center-in-img {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
 .status-icon {
   position: absolute !important;
   top: 0;
