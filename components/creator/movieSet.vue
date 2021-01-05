@@ -14,8 +14,10 @@
                 height="100%"
                 width="100%"
                 :aspect-ratio="27 / 40"
-                :lazy-src="require('~/assets/logo/Micket.svg')"
-                :src="movieData.poster.y"
+                :lazy-src="require('~/assets/logo/GrayMicket.svg')"
+                :src="
+                  movieData.poster.y || require('~/assets/logo/GrayMicket.svg')
+                "
               >
                 <v-expand-transition>
                   <div

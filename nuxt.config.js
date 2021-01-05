@@ -130,5 +130,9 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
-  loading: '~/components/loading.vue',
+  loading: {
+    color: '#2196F3',
+    // height: '5px',
+  },
+  // loading: '~/components/loading.vue',
 }
