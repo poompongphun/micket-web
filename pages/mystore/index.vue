@@ -35,7 +35,11 @@
               sm="3"
               md="4"
             >
-              <movie :movie-data="movies" @delete="deletedGroup" />
+              <movieSet
+                :movie-data="movies"
+                @delete="deletedGroup"
+                @edit="clickEditGroup"
+              />
             </v-col>
           </v-row>
         </v-tab-item>
@@ -84,16 +88,19 @@
       </v-img>
     </div>
     <createMovieDialog ref="createMovieDialog" @newdata="newMovie" />
+    <editMovieGroupDialog ref="editMovieGroupDialog" @update="updateGroup" />
   </div>
 </template>
 
 <script>
-import movie from '@/components/creator/movieSet'
+import movieSet from '@/components/creator/movieSet'
 import createMovieDialog from '@/components/creator/createMovieDialog'
+import editMovieGroupDialog from '@/components/creator/editMovieGroupDialog'
 export default {
   components: {
-    movie,
+    movieSet,
     createMovieDialog,
+    editMovieGroupDialog,
   },
   validate({ store }) {
     return store.getters.loggedInUser.creator
@@ -129,6 +136,13 @@ export default {
     deletedGroup(id) {
       const index = this.movie.findIndex((movie) => movie._id === id)
       this.movie.splice(index, 1)
+    },
+    clickEditGroup(id) {
+      this.$refs.editMovieGroupDialog.open(id)
+    },
+    updateGroup(val) {
+      const index = this.movie.findIndex((movie) => movie._id === val._id)
+      this.movie.splice(index, 1, val)
     },
   },
 }

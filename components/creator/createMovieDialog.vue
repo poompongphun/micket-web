@@ -351,7 +351,7 @@ export default {
       if (!this.$v.$invalid && !this.VposterError && !this.HposterError) {
         const sendData = {
           title: this.title,
-          description: this.description,
+          description: this.Format(this.description),
         }
         const posterX = this.hImg.file
         const posterY = this.vImg.file
@@ -418,6 +418,15 @@ export default {
         return true
       }
       return false
+    },
+    Format(content) {
+      if (!content || content.trim() === '') return ''
+      // console.log(content)
+      // content = content.replace("@", "")
+      return content
+        .replace(/@+/g, ' ')
+        .replace(/\n\s*\n/g, '\n')
+        .replace(/[ \t\r]+/g, ' ')
     },
     clear() {
       this.title = ''

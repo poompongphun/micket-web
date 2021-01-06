@@ -57,8 +57,13 @@
         :video="movie.media.video"
         :thumbnail="movie.media.thumbnail"
       /> -->
-        <v-card>
-          <v-img :aspect-ratio="16 / 9" :src="movie.media.thumbnail"></v-img>
+        <v-card color="iconBg">
+          <v-img
+            :aspect-ratio="16 / 9"
+            :src="
+              movie.media.thumbnail || require('~/assets/logo/GrayMicket.svg')
+            "
+          ></v-img>
         </v-card>
       </v-card>
       <h3 class="py-1 overflow-hidden" style="height: 60px; font-size: 1.1rem">

@@ -60,7 +60,15 @@
                         :small="$vuetify.breakpoint.xs"
                         @click="makePrivate(movieData._id)"
                       >
-                        <v-icon left>mdi-lock</v-icon>
+                        <v-progress-circular
+                          v-if="publicLoading"
+                          class="mr-3"
+                          indeterminate
+                          color="primary"
+                          :size="18"
+                          :width="2"
+                        ></v-progress-circular>
+                        <v-icon v-else left>mdi-lock</v-icon>
                         Private
                       </v-btn>
                       <v-btn
@@ -72,7 +80,15 @@
                         :small="$vuetify.breakpoint.xs"
                         @click="makePublic(movieData._id)"
                       >
-                        <v-icon left>mdi-earth</v-icon>
+                        <v-progress-circular
+                          v-if="publicLoading"
+                          class="mr-3"
+                          indeterminate
+                          color="primary"
+                          :size="18"
+                          :width="2"
+                        ></v-progress-circular>
+                        <v-icon v-else left>mdi-earth</v-icon>
                         Public
                       </v-btn>
                       <v-btn
@@ -81,7 +97,7 @@
                         depressed
                         block
                         :small="$vuetify.breakpoint.xs"
-                        @click="editMovie"
+                        @click="editMovie(movieData._id)"
                       >
                         <v-icon left>mdi-pencil</v-icon>
                         Edit
@@ -101,17 +117,19 @@
                 </v-expand-transition>
               </v-img>
             </v-card>
-            <v-icon
-              v-if="movieData.public"
-              class="status-icon"
-              color="success"
-              small
-            >
-              mdi-earth
-            </v-icon>
-            <v-icon v-else class="status-icon" color="red" small>
-              mdi-lock
-            </v-icon>
+
+            <div class="status-icon">
+              <v-icon v-if="movieData.public" color="success" small>
+                mdi-earth
+              </v-icon>
+              <v-icon v-else color="red" small> mdi-lock </v-icon>
+              <span v-if="movieData.discount === 0" class="white--text">
+                ${{ movieData.price }}
+              </span>
+              <span v-else class="success--text">
+                ${{ calcDiscount(movieData.price, movieData.discount) }}
+              </span>
+            </div>
           </v-col>
           <v-col v-if="!$vuetify.breakpoint.smAndDown" cols="0" md="7">
             <v-card
@@ -145,7 +163,7 @@
                     </v-btn>
                   </template>
                   <v-list dense>
-                    <v-list-item @click="editMovie">
+                    <v-list-item @click="editMovie(movieData._id)">
                       <v-icon class="mr-3">mdi-pencil</v-icon>
                       <v-list-item-title>Edit</v-list-item-title>
                     </v-list-item>
@@ -202,7 +220,14 @@
                       : makePublic(movieData._id)
                   "
                 >
-                  <v-icon>
+                  <v-progress-circular
+                    v-if="publicLoading"
+                    indeterminate
+                    color="primary"
+                    :size="18"
+                    :width="2"
+                  ></v-progress-circular>
+                  <v-icon v-else>
                     {{ movieData.public ? 'mdi-lock' : 'mdi-earth' }}
                   </v-icon>
                 </v-btn>
@@ -223,10 +248,12 @@ export default {
       required: true,
     },
   },
-  data: () => ({}),
+  data: () => ({
+    publicLoading: false,
+  }),
   methods: {
-    editMovie() {
-      console.log('edit movie')
+    editMovie(id) {
+      this.$emit('edit', id)
     },
     async deleteMovie(id) {
       try {
@@ -241,18 +268,26 @@ export default {
       }
     },
     async makePublic(id) {
+      this.publicLoading = true
       const response = await this.$axios.patch(
         `/api/creator/movie-group/${id}`,
         { public: true }
       )
       this.movieData.public = response.data.public
+      this.publicLoading = false
     },
     async makePrivate(id) {
+      this.publicLoading = true
       const response = await this.$axios.patch(
         `/api/creator/movie-group/${id}`,
         { public: false }
       )
       this.movieData.public = response.data.public
+      this.publicLoading = false
+    },
+    calcDiscount(price, percent) {
+      const calc = price - (price / 100) * percent
+      return calc.toFixed(2)
     },
   },
 }
@@ -263,9 +298,9 @@ export default {
   position: absolute;
   top: 0;
   padding: 5px;
-  background: rgba(0, 0, 0, 0.2);
-  border-bottom-right-radius: 5px;
-  border-top-left-radius: 5px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom-right-radius: 3px;
+  border-top-left-radius: 3px;
 }
 .v-card--reveal {
   align-items: center;

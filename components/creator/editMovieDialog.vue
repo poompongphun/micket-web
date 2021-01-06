@@ -21,89 +21,84 @@
           </v-btn>
         </v-card-title>
         <v-card-text>
-          <v-card-text>
-            <v-form action="#" autocomplete="off">
-              <v-row>
-                <v-col cols="12" sm="8" md="7">
-                  <v-hover v-slot="{ hover }">
-                    <v-card
-                      width="100%"
-                      class="elevation-0"
-                      :disabled="loading || ImgLoading"
-                      @click="$refs.inputThumbnail.click()"
-                    >
-                      <v-responsive
-                        class="iconBg imgBox"
+          <v-form action="#" autocomplete="off">
+            <v-row>
+              <v-col cols="12" sm="8" md="7">
+                <v-hover v-slot="{ hover }">
+                  <v-card
+                    width="100%"
+                    class="elevation-0"
+                    :disabled="loading || ImgLoading"
+                    @click="$refs.inputThumbnail.click()"
+                  >
+                    <v-responsive class="iconBg imgBox" :aspect-ratio="16 / 9">
+                      <v-img
                         :aspect-ratio="16 / 9"
+                        contain
+                        :src="
+                          thumbnail || require('~/assets/logo/GrayMicket.svg')
+                        "
                       >
-                        <v-img
-                          :aspect-ratio="16 / 9"
-                          contain
-                          :src="
-                            thumbnail || require('~/assets/logo/GrayMicket.svg')
-                          "
+                        <div v-if="ImgLoading" class="d-flex center-in-img">
+                          <v-progress-circular
+                            class="mr-2"
+                            indeterminate
+                            color="primary"
+                            :size="50"
+                            :width="4"
+                          ></v-progress-circular>
+                        </div>
+                        <div
+                          v-else
+                          class="d-flex iconBg darken-2 v-card--reveal white--text"
+                          :class="{ 'on-hover': hover }"
+                          style="height: 100%"
                         >
-                          <div v-if="ImgLoading" class="d-flex center-in-img">
-                            <v-progress-circular
-                              class="mr-2"
-                              indeterminate
-                              color="primary"
-                              :size="50"
-                              :width="4"
-                            ></v-progress-circular>
-                          </div>
-                          <div
-                            v-else
-                            class="d-flex iconBg darken-2 v-card--reveal white--text"
-                            :class="{ 'on-hover': hover }"
-                            style="height: 100%"
-                          >
-                            <v-icon large color="white">mdi-upload</v-icon>
-                            <br />
-                            <h2>Upload</h2>
-                          </div>
-                        </v-img>
-                      </v-responsive>
-                    </v-card>
-                  </v-hover>
-                  <input
-                    ref="inputThumbnail"
-                    class="d-none"
-                    type="file"
-                    accept="image/*"
-                    @change="onFilePicked($event, id)"
-                  />
-                </v-col>
-                <v-col cols="12" sm="4" md="5">
-                  <v-text-field
-                    v-model="name"
-                    name="name"
-                    label="Name"
-                    counter
-                    :disabled="loading"
-                    :error-messages="nameErrors"
-                    @input="$v.name.$touch()"
-                    @blur="$v.name.$touch()"
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="price"
-                    name="price"
-                    label="Price"
-                    hint="Number Only"
-                    suffix="$"
-                    :disabled="loading"
-                    @keypress="isNumber($event)"
-                  ></v-text-field>
-                  <v-switch
-                    v-model="publics"
-                    class="ma-0"
-                    label="Public"
-                    :disabled="loading"
-                  ></v-switch>
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-card-text>
+                          <v-icon large color="white">mdi-upload</v-icon>
+                          <br />
+                          <h2>Upload</h2>
+                        </div>
+                      </v-img>
+                    </v-responsive>
+                  </v-card>
+                </v-hover>
+                <input
+                  ref="inputThumbnail"
+                  class="d-none"
+                  type="file"
+                  accept="image/*"
+                  @change="onFilePicked($event, id)"
+                />
+              </v-col>
+              <v-col cols="12" sm="4" md="5">
+                <v-text-field
+                  v-model="name"
+                  name="name"
+                  label="Name"
+                  counter
+                  :disabled="loading"
+                  :error-messages="nameErrors"
+                  @input="$v.name.$touch()"
+                  @blur="$v.name.$touch()"
+                ></v-text-field>
+                <v-text-field
+                  v-model="price"
+                  name="price"
+                  label="Price"
+                  hint="Number Only"
+                  suffix="$"
+                  :disabled="loading"
+                  @keypress="isNumber($event)"
+                ></v-text-field>
+                <v-switch
+                  v-model="publics"
+                  class="ma-0"
+                  label="Public"
+                  :disabled="loading"
+                ></v-switch>
+              </v-col>
+            </v-row>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
