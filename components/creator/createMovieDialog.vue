@@ -386,6 +386,7 @@ export default {
         } catch (error) {
           this.alertError = true
           this.errors = error.response.data
+          this.loading = false
         }
       }
     },
@@ -413,7 +414,6 @@ export default {
     checkFile(file) {
       // Allowing file type
       const allowedExtensions = /(\.jpeg|\.jpg|\.png|\.tiff|\.gif|\.bmp|\.webp)$/i
-      console.log(file)
       if (allowedExtensions.exec(file.name)) {
         return true
       }

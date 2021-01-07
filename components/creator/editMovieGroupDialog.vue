@@ -76,15 +76,6 @@
               :disabled="loading"
             />
             <v-text-field
-              v-model="price"
-              name="price"
-              label="Price"
-              hint="Number Only"
-              suffix="$"
-              :disabled="loading"
-              @keypress="isNumber($event)"
-            ></v-text-field>
-            <v-text-field
               v-model="discount"
               name="discount"
               label="Discount"
@@ -174,7 +165,6 @@ export default {
     creator: [],
     star: [],
     tag: [],
-    price: '',
     discount: '',
     publics: false,
 
@@ -229,7 +219,6 @@ export default {
       this.creator = responseGroup.detail.creator
       this.star = responseGroup.detail.star
       this.tag = responseGroup.detail.tag
-      this.price = responseGroup.price
       this.discount = responseGroup.discount
       this.publics = responseGroup.public
       this.dialog = true
@@ -252,7 +241,6 @@ export default {
             star: this.star,
             tag: this.tag,
           },
-          price: parseFloat(this.price || 0),
           discount: parseFloat(this.discount || 0),
           public: this.publics,
         }
