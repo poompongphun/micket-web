@@ -31,9 +31,11 @@
             <v-col
               v-for="movies in isPublic"
               :key="movies._id"
-              cols="4"
+              cols="6"
               sm="3"
-              md="4"
+              md="6"
+              lg="4"
+              xl="3"
             >
               <movieSet
                 :movie-data="movies"

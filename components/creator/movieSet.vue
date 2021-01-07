@@ -36,6 +36,7 @@
                         depressed
                         block
                         :small="$vuetify.breakpoint.xs"
+                        :to="`/movie/${movieData._id}`"
                       >
                         <v-icon left>mdi-storefront</v-icon>
                         Store
@@ -191,6 +192,7 @@
                   min-height="0"
                   width="40"
                   height="40"
+                  :to="`/movie/${movieData._id}`"
                 >
                   <v-icon>mdi-storefront</v-icon>
                 </v-btn>
