@@ -58,7 +58,7 @@
                         depressed
                         block
                         :small="$vuetify.breakpoint.xs"
-                        @click="makePrivate(movieData._id)"
+                        @click="publish(movieData._id, false)"
                       >
                         <v-progress-circular
                           v-if="publicLoading"
@@ -78,7 +78,7 @@
                         depressed
                         block
                         :small="$vuetify.breakpoint.xs"
-                        @click="makePublic(movieData._id)"
+                        @click="publish(movieData._id, true)"
                       >
                         <v-progress-circular
                           v-if="publicLoading"
@@ -216,8 +216,8 @@
                   height="40"
                   @click="
                     movieData.public
-                      ? makePrivate(movieData._id)
-                      : makePublic(movieData._id)
+                      ? publish(movieData._id, false)
+                      : publish(movieData._id, true)
                   "
                 >
                   <v-progress-circular
@@ -267,20 +267,12 @@ export default {
         console.log(error)
       }
     },
-    async makePublic(id) {
+    async publish(id, state) {
       this.publicLoading = true
       const response = await this.$axios.patch(
         `/api/creator/movie-group/${id}`,
-        { public: true }
-      )
-      this.movieData.public = response.data.public
-      this.publicLoading = false
-    },
-    async makePrivate(id) {
-      this.publicLoading = true
-      const response = await this.$axios.patch(
-        `/api/creator/movie-group/${id}`,
-        { public: false }
+        { public: state },
+        { progress: false }
       )
       this.movieData.public = response.data.public
       this.publicLoading = false
