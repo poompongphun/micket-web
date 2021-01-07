@@ -10,7 +10,7 @@
   >
     <template v-slot:activator="{ on }">
       <v-card class="mx-1" :width="itemWidthResponsive" v-on="on">
-        <v-img :src="movieDetail.poster" :height="imgHeightResponsive">
+        <v-img :src="movieDetail.poster.x" :height="imgHeightResponsive">
           <div class="text-right">
             <span
               class="py-1 px-3 white--text rounded-l-lg font-weight-bold"
@@ -29,7 +29,7 @@
         :disabled="!this.$store.state.auth.loggedIn"
       >
         <v-img
-          :src="movieDetail.poster"
+          :src="movieDetail.poster.x"
           :height="imgMenuHeightResponsive"
         ></v-img>
         <div class="pa-2">
@@ -42,7 +42,7 @@
                   :small="btnMenuResponsive"
                   fab
                   depressed
-                  :to="'/movie/' + movieDetail.title"
+                  :to="'/movie/' + movieDetail._id"
                   v-bind="attrs"
                   v-on="on"
                 >
@@ -54,16 +54,16 @@
           </div>
           <v-row class="pa-2 mb-2" justify="space-between" no-gutters>
             <span class="font-weight-bold normalText--text">
-              {{ movieDetail.own_count }} Users own this
+              200 Users own this
             </span>
             <span class="font-weight-bold success--text">
-              {{ toFixed((movieDetail.like * 100) / movieDetail.own_count) }}
-              % Likes
+              <!-- {{ toFixed((movieDetail.like * 100) / movieDetail.own_count) }} -->
+              20 % Likes
             </span>
           </v-row>
           <div class="mb-2">
             <v-chip
-              v-for="tag in movieDetail.tag"
+              v-for="tag in movieDetail.detail.tag"
               :key="tag"
               class="ml-1"
               :x-small="btnMenuResponsive"

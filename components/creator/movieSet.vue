@@ -31,6 +31,7 @@
                     ></div>
                     <div class="pa-1 item">
                       <v-btn
+                        v-if="movieData.public"
                         class="mb-1"
                         color="iconBg"
                         depressed
@@ -120,14 +121,14 @@
             </v-card>
 
             <div class="status-icon">
-              <v-icon v-if="movieData.public" color="success" small>
+              <v-icon v-if="movieData.public" color="green accent-3" small>
                 mdi-earth
               </v-icon>
               <v-icon v-else color="red" small> mdi-lock </v-icon>
               <span v-if="movieData.discount === 0" class="white--text">
                 ${{ movieData.price }}
               </span>
-              <span v-else class="success--text">
+              <span v-else class="green--text text--accent-3">
                 ${{ calcDiscount(movieData.price, movieData.discount) }}
               </span>
             </div>
@@ -185,6 +186,7 @@
               </div>
               <div class="px-1 pb-1 mt-auto">
                 <v-btn
+                  v-if="movieData.public"
                   class="pa-0"
                   text
                   depressed

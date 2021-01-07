@@ -39,53 +39,59 @@ export default {
     promoteSlide,
     movieBlock,
   },
+  async asyncData({ $axios }) {
+    const responseMovie = await $axios.$get(`/api/store/movie/`, {
+      progress: false,
+    })
+    return { movies: responseMovie }
+  },
   data: () => ({
     count: 5,
     model: null,
     movies: [
-      {
-        title: 'The Witcher',
-        poster:
-          'https://www.gamingdose.com/wp-content/uploads/2020/01/AAAABXH81uXzUNSVsIbZbV8eUidh4wf4mUXniE9hZb8926m7asXYaCh9XnjYuO4VSkZeJU_Nitzm8TotvouCYI15UIrX_tBp-1920x1080.jpg',
-        price: 100,
-        own_count: 1000,
-        like: 125,
-        tag: ['Sci-fi', 'Fantasy'],
-      },
-      {
-        title: 'Money Heist',
-        poster: 'https://mpics.mgronline.com/pics/Images/563000003510401.JPEG',
-        price: 200,
-        own_count: 1980,
-        like: 125,
-        tag: ['Drama', 'Action'],
-      },
-      {
-        title: 'The Queens Gambit',
-        poster:
-          'https://cdn.lifestyleasia.com/wp-content/uploads/sites/3/2020/10/30125302/AAAABcL2iWNIx4vi4cc0PT0PTlMcuXiOrJcg0UujHyeug-6AETl6AmELWTiRI0nzrJ4MyTI-mPSFzuSnLTH63iJyJxMIVp5M-1600x900.jpg',
-        price: 44,
-        own_count: 222,
-        like: 33,
-        tag: ['Drama'],
-      },
-      {
-        title: 'Kimetsu no Yaiba',
-        poster:
-          'https://i.pinimg.com/736x/31/c0/cf/31c0cf74246eb496720ec91c03049282.jpg',
-        price: 5353,
-        own_count: 675,
-        like: 434,
-        tag: ['Action', 'Fantasy', 'Comedy'],
-      },
-      {
-        title: 'Spiderman',
-        poster: 'https://wallpaperaccess.com/full/733951.jpg',
-        price: 200,
-        own_count: 6346,
-        like: 644,
-        tag: ['Action', 'Fantasy', 'Comedy'],
-      },
+      // {
+      //   title: 'The Witcher',
+      //   poster:
+      //     'https://www.gamingdose.com/wp-content/uploads/2020/01/AAAABXH81uXzUNSVsIbZbV8eUidh4wf4mUXniE9hZb8926m7asXYaCh9XnjYuO4VSkZeJU_Nitzm8TotvouCYI15UIrX_tBp-1920x1080.jpg',
+      //   price: 100,
+      //   own_count: 1000,
+      //   like: 125,
+      //   tag: ['Sci-fi', 'Fantasy'],
+      // },
+      // {
+      //   title: 'Money Heist',
+      //   poster: 'https://mpics.mgronline.com/pics/Images/563000003510401.JPEG',
+      //   price: 200,
+      //   own_count: 1980,
+      //   like: 125,
+      //   tag: ['Drama', 'Action'],
+      // },
+      // {
+      //   title: 'The Queens Gambit',
+      //   poster:
+      //     'https://cdn.lifestyleasia.com/wp-content/uploads/sites/3/2020/10/30125302/AAAABcL2iWNIx4vi4cc0PT0PTlMcuXiOrJcg0UujHyeug-6AETl6AmELWTiRI0nzrJ4MyTI-mPSFzuSnLTH63iJyJxMIVp5M-1600x900.jpg',
+      //   price: 44,
+      //   own_count: 222,
+      //   like: 33,
+      //   tag: ['Drama'],
+      // },
+      // {
+      //   title: 'Kimetsu no Yaiba',
+      //   poster:
+      //     'https://i.pinimg.com/736x/31/c0/cf/31c0cf74246eb496720ec91c03049282.jpg',
+      //   price: 5353,
+      //   own_count: 675,
+      //   like: 434,
+      //   tag: ['Action', 'Fantasy', 'Comedy'],
+      // },
+      // {
+      //   title: 'Spiderman',
+      //   poster: 'https://wallpaperaccess.com/full/733951.jpg',
+      //   price: 200,
+      //   own_count: 6346,
+      //   like: 644,
+      //   tag: ['Action', 'Fantasy', 'Comedy'],
+      // },
     ],
   }),
 }
