@@ -261,11 +261,9 @@ export default {
     },
     async deleteMovie(id) {
       try {
-        const response = await this.$axios.$delete(
-          `/api/creator/movie-group/${id}`
-        )
+        const response = await this.$store.dispatch('mystore/delGroup', id)
         if (response) {
-          this.$emit('delete', id)
+          // this.$emit('delete', id)
         }
       } catch (error) {
         console.log(error)
@@ -273,13 +271,13 @@ export default {
     },
     async publish(id, state) {
       this.publicLoading = true
-      const response = await this.$axios.patch(
-        `/api/creator/movie-group/${id}`,
-        { public: state },
-        { progress: false }
-      )
-      this.movieData.public = response.data.public
-      this.publicLoading = false
+      const response = await this.$store.dispatch('mystore/updateGroup', {
+        id,
+        value: { public: state },
+      })
+      if (response) {
+        this.publicLoading = false
+      }
     },
     calcDiscount(price, percent) {
       const calc = price - (price / 100) * percent

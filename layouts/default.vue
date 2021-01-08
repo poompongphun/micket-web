@@ -17,6 +17,19 @@
 
       <v-btn
         v-if="$store.state.auth.loggedIn"
+        class="no-active mr-1"
+        color="iconBg"
+        rounded
+        depressed
+        small
+        to="/cart"
+      >
+        <v-icon left>mdi-cart-outline</v-icon>
+        2
+      </v-btn>
+
+      <v-btn
+        v-if="$store.state.auth.loggedIn"
         class="no-active"
         color="iconBg"
         rounded
@@ -42,6 +55,32 @@
         <nuxt />
       </v-container>
     </v-main>
+
+    <v-snackbar
+      v-model="snackbar"
+      class="px-3"
+      :timeout="timeout"
+      :color="`${alert.color}--text navbar`"
+      left
+    >
+      <v-row>
+        <v-icon left :color="alert.color">{{ alert.icon }}</v-icon>
+        <span>{{ alert.text }}</span>
+      </v-row>
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          depressed
+          icon
+          x-small
+          v-bind="attrs"
+          :color="alert.color"
+          @click="snackbar = false"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -55,7 +94,16 @@ export default {
   },
   data: () => ({
     loading: true,
+    snackbar: false,
+    timeout: 5000,
+    alert: { color: '', text: '', icon: '' },
   }),
+  watch: {
+    '$store.state.alert'(val) {
+      this.alert = val[0]
+      this.snackbar = true
+    },
+  },
   mounted() {
     this.$nextTick(() => {
       this.$nuxt.$loading.start()

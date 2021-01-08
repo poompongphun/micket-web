@@ -197,12 +197,12 @@ export default {
       }
     },
     star(val) {
-      if (val.length > 20) {
+      if (val.length > 100) {
         this.$nextTick(() => this.star.pop())
       }
     },
     tag(val) {
-      if (val.length > 5) {
+      if (val.length > 10) {
         this.$nextTick(() => this.tag.pop())
       }
     },
@@ -245,13 +245,11 @@ export default {
           public: this.publics,
         }
         try {
-          const editMovie = await this.$axios.$patch(
-            `/api/creator/movie-group/${id}`,
-            sendData,
-            { progress: false }
-          )
+          const editMovie = await this.$store.dispatch('mystore/updateGroup', {
+            id,
+            value: sendData,
+          })
           if (editMovie) {
-            this.$emit('update', editMovie)
             this.loading = false
             this.dialog = false
           }

@@ -128,18 +128,20 @@ export default {
     editMovieDialog,
     videoPlayer,
   },
-  async validate({ store, $axios, params }) {
-    const groupId = params.upload
-    const responseGroup = await $axios.$get(
-      `/api/creator/movie-group/${groupId}`
+  async validate({ store, params }) {
+    if (store.state.mystore.movieGroup.length === 0) {
+      await store.dispatch('mystore/getGroup')
+    }
+    return (
+      store.state.mystore.movieGroup.some(
+        (group) => group._id === params.upload
+      ) && store.getters.loggedInUser.creator
     )
-    return store.getters.loggedInUser.creator && responseGroup
   },
-  async asyncData({ $axios, params }) {
+  async asyncData({ $axios, params, store }) {
     const groupId = params.upload
-    const responseGroup = await $axios.$get(
-      `/api/creator/movie-group/${groupId}`,
-      { progress: false }
+    const responseGroup = store.state.mystore.movieGroup.find(
+      (group) => group._id === groupId
     )
     const responseMovie = await $axios.$get(
       `/api/creator/movie/group/${groupId}`,

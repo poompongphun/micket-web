@@ -357,30 +357,16 @@ export default {
         const posterY = this.vImg.file
 
         try {
-          const responseMovie = await this.$axios.post(
-            '/api/creator/movie-group/create',
-            sendData
-          )
-          const uploadPosterX = await this.uploadPoster(
-            'x',
+          const responseMovie = await this.$store.dispatch('mystore/addGroup', {
+            sendData,
             posterX,
-            responseMovie.data._id
-          )
-          const uploadPosterY = await this.uploadPoster(
-            'y',
             posterY,
-            responseMovie.data._id
-          )
-
-          if (uploadPosterX && uploadPosterY) {
-            responseMovie.data.poster.x = this.hImg.preview
-            responseMovie.data.poster.y = this.vImg.preview
-
+          })
+          if (responseMovie) {
             setTimeout(() => {
               this.loading = false
               this.dialog = false
               this.clear()
-              this.$emit('newdata', responseMovie.data)
             }, 100)
           }
         } catch (error) {
@@ -388,27 +374,6 @@ export default {
           this.errors = error.response.data
           this.loading = false
         }
-      }
-    },
-    async uploadPoster(type, img, id) {
-      try {
-        const formData = new FormData()
-        formData.append('poster', img)
-        await this.$axios.$post(
-          `/api/creator/upload/poster/${id}/${type}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-            progress: false,
-          }
-        )
-        return true
-      } catch (error) {
-        this.alertError = true
-        this.errors = error.response.data
-        return false
       }
     },
     checkFile(file) {

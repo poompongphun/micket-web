@@ -37,11 +37,7 @@
               lg="4"
               xl="3"
             >
-              <movieSet
-                :movie-data="movies"
-                @delete="deletedGroup"
-                @edit="clickEditGroup"
-              />
+              <movieSet :movie-data="movies" @edit="clickEditGroup" />
             </v-col>
           </v-row>
         </v-tab-item>
@@ -89,8 +85,8 @@
         </div>
       </v-img>
     </div>
-    <createMovieDialog ref="createMovieDialog" @newdata="newMovie" />
-    <editMovieGroupDialog ref="editMovieGroupDialog" @update="updateGroup" />
+    <createMovieDialog ref="createMovieDialog" />
+    <editMovieGroupDialog ref="editMovieGroupDialog" />
   </div>
 </template>
 
@@ -107,9 +103,11 @@ export default {
   validate({ store }) {
     return store.getters.loggedInUser.creator
   },
-  async asyncData({ $axios }) {
-    const response = await $axios.get('/api/creator/movie-group/')
-    return { movie: response.data }
+  async asyncData({ store }) {
+    if (store.state.mystore.movieGroup.length === 0) {
+      const responseMovie = await store.dispatch('mystore/getGroup')
+      return { movie: responseMovie }
+    } else return { movie: store.state.mystore.movieGroup }
   },
   data: () => ({
     movie: [],
@@ -132,19 +130,8 @@ export default {
     createMovie() {
       this.$refs.createMovieDialog.open()
     },
-    newMovie(val) {
-      this.movie.unshift(val)
-    },
-    deletedGroup(id) {
-      const index = this.movie.findIndex((movie) => movie._id === id)
-      this.movie.splice(index, 1)
-    },
     clickEditGroup(id) {
       this.$refs.editMovieGroupDialog.open(id)
-    },
-    updateGroup(val) {
-      const index = this.movie.findIndex((movie) => movie._id === val._id)
-      this.movie.splice(index, 1, val)
     },
   },
 }
