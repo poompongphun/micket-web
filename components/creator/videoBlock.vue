@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="elevation-0" @click="playVideo(movie.media.video)">
+    <v-card class="elevation-0 defaultBg" @click="playVideo(movie.media.video)">
       <!-- Show Movie -->
       <v-card elevation="0">
         <!-- Public / Private Icon -->

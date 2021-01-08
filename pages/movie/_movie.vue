@@ -102,7 +102,13 @@
                               ${{ calcDiscount(movie.price, movie.discount) }}
                             </span>
                           </div>
-                          <v-btn class="pa-5" color="success" rounded depressed>
+                          <v-btn
+                            class="pa-5"
+                            color="success"
+                            rounded
+                            depressed
+                            @click="buyPack(season)"
+                          >
                             Buy Pack
                           </v-btn>
                         </div>
@@ -113,6 +119,7 @@
                             width="120"
                             rounded
                             depressed
+                            @click="buyPack(season)"
                           >
                             Free
                           </v-btn>
@@ -214,6 +221,9 @@ export default {
     calcDiscount(price, percent) {
       const calc = price - (price / 100) * percent
       return calc.toFixed(2)
+    },
+    buyPack(season) {
+      console.log(season)
     },
   },
 }

@@ -25,7 +25,7 @@
         to="/cart"
       >
         <v-icon left>mdi-cart-outline</v-icon>
-        2
+        {{ $store.state.cart.length }}
       </v-btn>
 
       <v-btn
