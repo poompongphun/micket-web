@@ -81,16 +81,22 @@
         </v-btn>
       </template>
     </v-snackbar>
+    <haveAccountDialog
+      v-if="!$store.state.auth.loggedIn"
+      v-model="haveAccount"
+    />
   </v-app>
 </template>
 
 <script>
 import meProfile from '@/components/layoutItem/meProfile'
 import navDrawer from '@/components/layoutItem/navDrawer'
+import haveAccountDialog from '@/components/items/haveAccountDialog'
 export default {
   components: {
     meProfile,
     navDrawer,
+    haveAccountDialog,
   },
   data: () => ({
     loading: true,
@@ -98,12 +104,23 @@ export default {
     timeout: 5000,
     alert: { color: '', text: '', icon: '' },
   }),
+  computed: {
+    haveAccount: {
+      get() {
+        return this.$store.getters.haveAccount
+      },
+      set(value) {
+        this.$store.commit('sethaveAccount', false)
+      },
+    },
+  },
   watch: {
     '$store.state.alert'(val) {
       this.alert = val[0]
       this.snackbar = true
     },
   },
+
   mounted() {
     this.$nextTick(() => {
       this.$nuxt.$loading.start()

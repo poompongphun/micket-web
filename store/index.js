@@ -2,12 +2,16 @@ export const state = () => ({
   // auth: null,
   alert: [{ color: '', text: '', icon: '' }],
   cart: [],
+  haveAccount: false,
 })
 
 export const mutations = {
   addCoins(state, coins) {
     const addedCoins = state.auth.user.coins + coins
     state.auth.user.coins = addedCoins
+  },
+  sethaveAccount(state, bool) {
+    state.haveAccount = bool
   },
   useCoins(state, coins) {
     const usedCoins = state.auth.user.coins - coins
@@ -40,5 +44,8 @@ export const getters = {
   },
   checkItemCart: (state) => (id) => {
     return state.cart.some((movie) => movie._id === id)
+  },
+  haveAccount(state) {
+    return state.haveAccount
   },
 }
