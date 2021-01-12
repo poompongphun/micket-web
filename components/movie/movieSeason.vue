@@ -30,44 +30,75 @@
                 </div>
                 <v-card>
                   <v-img :src="movie.media.thumbnail">
-                    <v-tooltip
-                      v-if="!$store.getters.checkItemCart(movie._id)"
-                      bottom
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          class="cart-btn ma-2"
-                          color="primary"
-                          fab
-                          x-small
-                          depressed
-                          v-bind="attrs"
-                          v-on="on"
-                          @click="addToCart(movie)"
-                        >
-                          <v-icon>mdi-cart-plus</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Add to cart</span>
-                    </v-tooltip>
-                    <v-tooltip v-else bottom>
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          class="cart-btn ma-2"
-                          color="error"
-                          fab
-                          x-small
-                          depressed
-                          v-bind="attrs"
-                          v-on="on"
-                          @click="deleteCart(movie._id)"
-                        >
-                          <v-icon>mdi-cart-remove</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Delete</span>
-                    </v-tooltip>
+                    <div v-if="!disable">
+                      <v-tooltip
+                        v-if="!$store.getters.checkItemCart(movie._id)"
+                        bottom
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            class="cart-btn ma-2"
+                            color="primary"
+                            fab
+                            x-small
+                            depressed
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="
+                              $store.state.auth.loggedIn
+                                ? addToCart(movie)
+                                : noAuth
+                            "
+                          >
+                            <v-icon>mdi-cart-plus</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Add to cart</span>
+                      </v-tooltip>
+                      <v-tooltip v-else bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            class="cart-btn ma-2"
+                            color="error"
+                            fab
+                            x-small
+                            depressed
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="
+                              $store.state.auth.loggedIn
+                                ? deleteCart(movie._id)
+                                : noAuth
+                            "
+                          >
+                            <v-icon>mdi-cart-remove</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Delete</span>
+                      </v-tooltip>
+                    </div>
                   </v-img>
+                </v-card>
+                <h3
+                  class="py-1 overflow-hidden"
+                  style="height: 60px; font-size: 1.1rem"
+                >
+                  {{ movie.name }}
+                </h3>
+              </v-card>
+            </v-col>
+            <v-col
+              v-for="movie in ownedMovie[i].movie"
+              :key="movie._id"
+              cols="12"
+              sm="6"
+              md="6"
+              lg="4"
+              xl="3"
+            >
+              <v-card class="elevation-0 defaultBg" disabled>
+                <v-card>
+                  <v-img :src="movie.media.thumbnail"></v-img>
                 </v-card>
                 <h3
                   class="py-1 overflow-hidden"
@@ -91,6 +122,15 @@ export default {
       type: Array,
       required: true,
     },
+    ownedMovie: {
+      type: Array,
+      required: true,
+    },
+    disable: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
   data: () => ({
     tab: null,
@@ -101,6 +141,9 @@ export default {
     },
     deleteCart(id) {
       this.$store.dispatch('deleteCart', id)
+    },
+    noAuth() {
+      this.$store.commit('sethaveAccount', true)
     },
   },
 }

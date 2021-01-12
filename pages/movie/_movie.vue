@@ -53,6 +53,9 @@
                                   color="success"
                                   x-large
                                   rounded
+                                  @click="
+                                    $store.state.auth.loggedIn ? '' : noAuth
+                                  "
                                 >
                                   <v-icon left>mdi-thumb-up</v-icon>
                                   9999
@@ -65,6 +68,9 @@
                                   color="grey"
                                   x-large
                                   rounded
+                                  @click="
+                                    $store.state.auth.loggedIn ? '' : noAuth
+                                  "
                                 >
                                   <v-icon left>mdi-thumb-down-outline</v-icon>
                                   222
@@ -80,6 +86,13 @@
                               color="primary"
                               rounded
                               depressed
+                              :disabled="
+                                ($store.getters.loggedInUser &&
+                                  movie.user_id._id ===
+                                    $store.getters.loggedInUser._id) ||
+                                movie.isOwned
+                              "
+                              @click="$store.state.auth.loggedIn ? '' : noAuth"
                             >
                               Add to Wishlist
                             </v-btn>
@@ -89,7 +102,37 @@
 
                       <!-- Buy Button -->
                       <v-col cols="6" class="text-right">
-                        <div v-if="movie.price !== 0">
+                        <div
+                          v-if="
+                            $store.getters.loggedInUser &&
+                            movie.user_id._id ===
+                              $store.getters.loggedInUser._id
+                          "
+                        >
+                          <v-btn
+                            class="pa-5"
+                            color="success"
+                            width="120"
+                            rounded
+                            depressed
+                            disabled
+                          >
+                            Creator
+                          </v-btn>
+                        </div>
+                        <div v-else-if="movie.isOwned">
+                          <v-btn
+                            class="pa-5"
+                            color="success"
+                            width="120"
+                            rounded
+                            depressed
+                            disabled
+                          >
+                            Owned
+                          </v-btn>
+                        </div>
+                        <div v-else-if="movie.price !== 0">
                           <div v-if="movie.discount === 0">
                             <h2>${{ movie.price.toFixed(2) }}</h2>
                           </div>
@@ -107,7 +150,11 @@
                             color="success"
                             rounded
                             depressed
-                            @click="buyPack(season)"
+                            @click="
+                              $store.state.auth.loggedIn
+                                ? buyPack(season)
+                                : noAuth
+                            "
                           >
                             Buy Pack
                           </v-btn>
@@ -119,7 +166,11 @@
                             width="120"
                             rounded
                             depressed
-                            @click="buyPack(season)"
+                            @click="
+                              $store.state.auth.loggedIn
+                                ? buyPack(season)
+                                : noAuth
+                            "
                           >
                             Free
                           </v-btn>
@@ -135,7 +186,14 @@
           <!-- Content -->
           <v-col cols="12">
             <v-divider class="py-2"></v-divider>
-            <movieSeason :movie-season="season" />
+            <movieSeason
+              :movie-season="season"
+              :owned-movie="owned"
+              :disable="
+                $store.getters.loggedInUser &&
+                movie.user_id._id === $store.getters.loggedInUser._id
+              "
+            />
             <!-- <h2>Trailer</h2>
             <v-responsive :aspect-ratio="16 / 9" width="300">
               <vue-plyr>
@@ -210,7 +268,17 @@ export default {
       `/api/store/movie/${params.movie}`,
       { progress: false }
     )
-    return { movie: responseMovie.movie, season: responseMovie.season }
+    const ownedMovie = await $axios.$get(
+      `/api/users/me/library/${params.movie}`,
+      {
+        progress: false,
+      }
+    )
+    return {
+      movie: responseMovie.movie,
+      season: responseMovie.season,
+      owned: ownedMovie,
+    }
   },
   data: () => ({
     rating: 3,
@@ -224,6 +292,9 @@ export default {
     },
     buyPack(season) {
       console.log(season)
+    },
+    noAuth() {
+      this.$store.commit('sethaveAccount', true)
     },
   },
 }
