@@ -1,8 +1,6 @@
 <template>
   <div>
-    <h1 class="pa-10 text-center">
-      ${{ toFixed($store.getters.loggedInUser.coins) }}
-    </h1>
+    <h1 class="pa-10 text-center">${{ $store.getters.loggedInUser.coins }}</h1>
     <v-row justify="center" align="start">
       <v-col cols="12" sm="9">
         <v-card>
@@ -39,7 +37,7 @@
                     rounded
                     @click="addMoney(money)"
                   >
-                    ${{ toFixed(money) }}
+                    ${{ money }}
                   </v-btn>
                 </v-col>
               </v-row>
@@ -116,10 +114,6 @@ export default {
           },
         })
         .render(this.$refs.paypal)
-    },
-    toFixed(num) {
-      const number = num.toFixed(2)
-      return number
     },
     addMoney(money) {
       this.moneyAdd.money = money
