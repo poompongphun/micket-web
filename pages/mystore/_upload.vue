@@ -51,7 +51,7 @@
               />
             </v-col>
             <v-col
-              v-for="upload in uploading"
+              v-for="upload in uploadCom"
               :key="upload.id"
               cols="12"
               sm="6"
@@ -156,6 +156,11 @@ export default {
     tab: null,
     uploading: [],
   }),
+  computed: {
+    uploadCom() {
+      return this.uploading.filter((upload) => upload.tab === this.tab)
+    },
+  },
   methods: {
     // Add new Season
     async newSeason(id) {
@@ -224,6 +229,7 @@ export default {
         const tempId = Date.now()
         this.uploading.push({
           id: tempId,
+          tab: index,
           name: file.name,
           img: URL.createObjectURL(cover),
         })
