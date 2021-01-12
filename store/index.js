@@ -7,16 +7,17 @@ export const state = () => ({
 
 export const mutations = {
   addCoins(state, coins) {
-    const addedCoins = state.auth.user.coins + coins
-    state.auth.user.coins = addedCoins
+    const addedCoins = state.auth.user.coins + parseFloat(coins)
+    state.auth.user.coins = addedCoins.toFixed(2)
+  },
+  useCoins(state, coins) {
+    const usedCoins = state.auth.user.coins - parseFloat(coins)
+    state.auth.user.coins = usedCoins.toFixed(2)
   },
   sethaveAccount(state, bool) {
     state.haveAccount = bool
   },
-  useCoins(state, coins) {
-    const usedCoins = state.auth.user.coins - coins
-    state.auth.user.coins = usedCoins.toFixed(2)
-  },
+
   setAlert(state, alert) {
     state.alert.unshift(alert)
   },
