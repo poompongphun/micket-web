@@ -23,11 +23,8 @@
       </v-card>
     </template>
     <div>
-      <haveAccount v-if="!this.$store.state.auth.loggedIn" />
-      <v-card
-        :width="menuWidthResponsive"
-        :disabled="!this.$store.state.auth.loggedIn"
-      >
+      <!-- <haveAccount v-if="!this.$store.state.auth.loggedIn" /> -->
+      <v-card :width="menuWidthResponsive">
         <v-img
           :src="movieDetail.poster.x"
           :height="imgMenuHeightResponsive"
@@ -42,9 +39,13 @@
                   :small="btnMenuResponsive"
                   fab
                   depressed
-                  :to="'/movie/' + movieDetail._id"
                   v-bind="attrs"
                   v-on="on"
+                  @click="
+                    btn.auth || $store.state.auth.loggedIn
+                      ? $router.push(`/movie/${movieDetail._id}`)
+                      : noAuth
+                  "
                 >
                   <v-icon>{{ btn.icon }}</v-icon>
                 </v-btn>
@@ -54,7 +55,7 @@
           </div>
           <v-row class="pa-2 mb-2" justify="space-between" no-gutters>
             <span class="font-weight-bold normalText--text">
-              200 Users own this
+              {{ movieDetail.owned_user }} Users own this
             </span>
             <span class="font-weight-bold success--text">
               <!-- {{ toFixed((movieDetail.like * 100) / movieDetail.own_count) }} -->
@@ -78,11 +79,11 @@
 </template>
 
 <script>
-import haveAccount from '@/components/items/haveAccount'
+// import haveAccount from '@/components/items/haveAccount'
 export default {
-  components: {
-    haveAccount,
-  },
+  // components: {
+  //   haveAccount,
+  // },
   props: {
     movieDetail: {
       type: Object,
@@ -127,10 +128,18 @@ export default {
   },
   data: () => ({
     menuBtn: [
-      { icon: 'mdi-play-outline', tooltip: 'Play Trailer' },
-      { icon: 'mdi-storefront-outline', tooltip: 'Store' },
-      { icon: 'mdi-thumb-up-outline', tooltip: 'Like' },
-      { icon: 'mdi-thumb-down-outline', tooltip: 'Dislike' },
+      { icon: 'mdi-play-outline', tooltip: 'Play Trailer', auth: true },
+      { icon: 'mdi-storefront-outline', tooltip: 'Store', auth: true },
+      {
+        icon: 'mdi-thumb-up-outline',
+        tooltip: 'Like',
+        auth: false,
+      },
+      {
+        icon: 'mdi-thumb-down-outline',
+        tooltip: 'Dislike',
+        auth: false,
+      },
     ],
   }),
   computed: {
@@ -169,6 +178,9 @@ export default {
     toFixed(num) {
       const number = num.toFixed(2)
       return number
+    },
+    noAuth() {
+      this.$store.commit('sethaveAccount', true)
     },
   },
 }
