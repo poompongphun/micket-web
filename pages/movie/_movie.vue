@@ -168,7 +168,7 @@
                             depressed
                             @click="
                               $store.state.auth.loggedIn
-                                ? buyPack(season)
+                                ? buyPack(movie._id)
                                 : noAuth
                             "
                           >
@@ -290,8 +290,18 @@ export default {
       const calc = price - (price / 100) * percent
       return calc.toFixed(2)
     },
-    buyPack(season) {
-      console.log(season)
+    async buyPack(id) {
+      try {
+        const response = await this.$axios.$post(`/api/store/buy/group/${id}`, {
+          progress: false,
+        })
+        if (response) {
+          this.$store.dispatch('getLibrary')
+          this.$router.push('/library')
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
     noAuth() {
       this.$store.commit('sethaveAccount', true)
