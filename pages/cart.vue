@@ -163,6 +163,8 @@ export default {
       )
       if (confirmPay) {
         this.$store.commit('useCoins', sumPrice)
+        this.$store.dispatch('getLibrary')
+        this.$router.push('/library')
       }
     },
     delCart(id) {

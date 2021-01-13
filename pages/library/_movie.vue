@@ -67,6 +67,15 @@
 
 <script>
 export default {
+  async validate({ store, params }) {
+    if (!store.state.library.length) {
+      await store.dispatch('getLibrary')
+    }
+    return (
+      store.state.library.some((movie) => movie._id === params.movie) &&
+      store.state.auth.loggedIn
+    )
+  },
   async asyncData({ $axios, params, store }) {
     const ownedMovie = await $axios.$get(
       `/api/users/me/library/${params.movie}`,
@@ -79,6 +88,7 @@ export default {
     }
   },
   data: () => ({
+    movies: [],
     tab: null,
     renderComponent: true,
     options: {

@@ -3,6 +3,7 @@ export const state = () => ({
   alert: [{ color: '', text: '', icon: '' }],
   cart: [],
   haveAccount: false,
+  library: [],
 })
 
 export const mutations = {
@@ -28,6 +29,9 @@ export const mutations = {
     const index = state.cart.findIndex((movie) => movie._id === id)
     state.cart.splice(index, 1)
   },
+  setLibrary(state, library) {
+    state.library = library
+  },
 }
 
 export const actions = {
@@ -36,6 +40,13 @@ export const actions = {
   },
   deleteCart(vuexContext, id) {
     vuexContext.commit('deleteCart', id)
+  },
+  async getLibrary({ commit }) {
+    const responseMovie = await this.$axios.$get(`/api/users/me/library/`, {
+      progress: false,
+    })
+    commit('setLibrary', responseMovie.library)
+    return responseMovie.library
   },
 }
 

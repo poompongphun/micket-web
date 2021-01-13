@@ -45,12 +45,18 @@
 
 <script>
 export default {
-  async asyncData({ $axios }) {
-    const responseMovie = await $axios.$get(`/api/users/me/library/`, {
-      progress: false,
-    })
-    return { movies: responseMovie.library }
+  validate({ store }) {
+    return store.state.auth.loggedIn
   },
+  async asyncData({ $axios, store }) {
+    if (store.state.library.length === 0) {
+      const responseMovie = await store.dispatch('getLibrary')
+      return { movies: responseMovie }
+    } else return { movies: store.state.library }
+  },
+  data: () => ({
+    movies: [],
+  }),
 }
 </script>
 
