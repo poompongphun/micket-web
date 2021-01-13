@@ -210,7 +210,6 @@ export default {
     updateMovie(val) {
       const id = val.id
       const movieUpdate = val.data
-      console.log(movieUpdate)
       const MovieIndex = this.movieSeason[this.tab].movie.findIndex(
         (movie) => movie._id === id
       )

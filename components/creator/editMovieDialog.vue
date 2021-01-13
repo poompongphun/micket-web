@@ -148,6 +148,7 @@ export default {
   },
   data: () => ({
     dialog: false,
+    data: null,
     id: '',
     name: '',
     price: '',
@@ -175,6 +176,7 @@ export default {
       const responseMovie = await this.$axios.$get(`/api/creator/movie/${id}`, {
         progress: false,
       })
+      this.data = responseMovie
       this.id = responseMovie._id
       this.name = responseMovie.name
       this.price = responseMovie.price
@@ -232,6 +234,12 @@ export default {
             { progress: false }
           )
           if (responseUpdate) {
+            // update group price
+            this.$store.commit('mystore/updateGroupPrice', {
+              id: responseUpdate.group_id,
+              cash: responseUpdate.price - this.data.price,
+            })
+
             this.$emit('update', { id, data: responseUpdate })
             this.dialog = false
             this.loading = false

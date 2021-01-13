@@ -18,6 +18,12 @@ export const mutations = {
     const index = state.movieGroup.findIndex((group) => group._id === id)
     state.movieGroup.splice(index, 1)
   },
+  updateGroupPrice(state, value) {
+    const id = value.id
+    const cash = parseFloat(value.cash)
+    const index = state.movieGroup.findIndex((group) => group._id === id)
+    state.movieGroup[index].price += cash
+  },
 }
 
 export const actions = {
