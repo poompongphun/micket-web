@@ -151,7 +151,6 @@ export default {
       const sumPrice = this.sumPrice(movie)
       movie.forEach((movie) => {
         movieId.push(movie._id)
-        this.$store.commit('deleteCart', movie._id)
       })
       const createBill = await this.$axios.$post(
         '/api/store/buy/bill',
@@ -162,6 +161,9 @@ export default {
         `/api/store/buy/${createBill._id}`
       )
       if (confirmPay) {
+        confirmPay.order.forEach((order) => {
+          this.$store.commit('deleteCart', order)
+        })
         this.$store.commit('useCoins', sumPrice)
         this.$store.dispatch('getLibrary')
         this.$router.push('/library')
