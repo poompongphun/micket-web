@@ -194,15 +194,6 @@
                 movie.user_id._id === $store.getters.loggedInUser._id
               "
             />
-            <!-- <h2>Trailer</h2>
-            <v-responsive :aspect-ratio="16 / 9" width="300">
-              <vue-plyr>
-                <div
-                  data-plyr-provider="youtube"
-                  data-plyr-embed-id="p_PJbmrX4uk"
-                ></div>
-              </vue-plyr>
-            </v-responsive> -->
           </v-col>
         </v-row>
       </v-col>
@@ -263,17 +254,16 @@ export default {
   components: {
     movieSeason,
   },
-  async asyncData({ $axios, params }) {
+  async asyncData({ $axios, params, store }) {
     const responseMovie = await $axios.$get(
       `/api/store/movie/${params.movie}`,
       { progress: false }
     )
-    const ownedMovie = await $axios.$get(
-      `/api/users/me/library/${params.movie}`,
-      {
-        progress: false,
-      }
-    )
+    const ownedMovie = store.getters.loggedInUser
+      ? await $axios.$get(`/api/users/me/library/${params.movie}`, {
+          progress: false,
+        })
+      : []
     return {
       movie: responseMovie.movie,
       season: responseMovie.season,
@@ -284,6 +274,7 @@ export default {
     rating: 3,
     movie: null,
     season: [],
+    owned: [],
   }),
   methods: {
     calcDiscount(price, percent) {

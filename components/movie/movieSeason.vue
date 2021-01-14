@@ -88,7 +88,7 @@
               </v-card>
             </v-col>
             <v-col
-              v-for="movie in ownedMovie[i].movie"
+              v-for="movie in ownedMovie[i] ? ownedMovie[i].movie : []"
               :key="movie._id"
               cols="12"
               sm="6"
