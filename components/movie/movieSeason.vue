@@ -47,7 +47,7 @@
                             @click="
                               $store.state.auth.loggedIn
                                 ? addToCart(movie)
-                                : noAuth
+                                : noAuth()
                             "
                           >
                             <v-icon>mdi-cart-plus</v-icon>
@@ -68,7 +68,7 @@
                             @click="
                               $store.state.auth.loggedIn
                                 ? deleteCart(movie._id)
-                                : noAuth
+                                : noAuth()
                             "
                           >
                             <v-icon>mdi-cart-remove</v-icon>

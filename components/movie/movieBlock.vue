@@ -44,7 +44,7 @@
                   @click="
                     btn.auth || $store.state.auth.loggedIn
                       ? $router.push(`/movie/${movieDetail._id}`)
-                      : noAuth
+                      : noAuth()
                   "
                 >
                   <v-icon>{{ btn.icon }}</v-icon>

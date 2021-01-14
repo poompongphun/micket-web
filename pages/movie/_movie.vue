@@ -54,7 +54,7 @@
                                   x-large
                                   rounded
                                   @click="
-                                    $store.state.auth.loggedIn ? '' : noAuth
+                                    $store.state.auth.loggedIn ? '' : noAuth()
                                   "
                                 >
                                   <v-icon left>mdi-thumb-up</v-icon>
@@ -69,7 +69,7 @@
                                   x-large
                                   rounded
                                   @click="
-                                    $store.state.auth.loggedIn ? '' : noAuth
+                                    $store.state.auth.loggedIn ? '' : noAuth()
                                   "
                                 >
                                   <v-icon left>mdi-thumb-down-outline</v-icon>
@@ -92,7 +92,9 @@
                                     $store.getters.loggedInUser._id) ||
                                 movie.isOwned
                               "
-                              @click="$store.state.auth.loggedIn ? '' : noAuth"
+                              @click="
+                                $store.state.auth.loggedIn ? '' : noAuth()
+                              "
                             >
                               Add to Wishlist
                             </v-btn>
@@ -153,7 +155,7 @@
                             @click="
                               $store.state.auth.loggedIn
                                 ? buyPack(season)
-                                : noAuth
+                                : noAuth()
                             "
                           >
                             Buy Pack
@@ -169,7 +171,7 @@
                             @click="
                               $store.state.auth.loggedIn
                                 ? buyPack(movie._id)
-                                : noAuth
+                                : noAuth()
                             "
                           >
                             Free
