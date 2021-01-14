@@ -288,9 +288,11 @@ export default {
   }),
   computed: {
     isWishlist() {
-      return this.$store.getters.loggedInUser.wishlist.some(
-        (movie) => movie._id === this.$route.params.movie
-      )
+      return this.$store.getters.loggedInUser
+        ? this.$store.getters.loggedInUser.wishlist.some(
+            (movie) => movie._id === this.$route.params.movie
+          )
+        : false
     },
   },
   methods: {
