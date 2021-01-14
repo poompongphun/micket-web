@@ -2,7 +2,7 @@ export const state = () => ({
   // auth: null,
   alert: [{ color: '', text: '', icon: '' }],
   cart: [],
-  haveAccount: false,
+  haveAccount: true,
   library: [],
 })
 
@@ -17,6 +17,15 @@ export const mutations = {
   },
   sethaveAccount(state, bool) {
     state.haveAccount = bool
+  },
+  addWishlist(state, movie) {
+    state.auth.user.wishlist.push(movie)
+  },
+  delWishlist(state, id) {
+    const index = state.auth.user.wishlist.findIndex(
+      (movie) => movie._id === id
+    )
+    state.auth.user.wishlist.splice(index, 1)
   },
 
   setAlert(state, alert) {
@@ -47,6 +56,27 @@ export const actions = {
     })
     commit('setLibrary', responseMovie.library)
     return responseMovie.library
+  },
+  async addWishlist(vuexContext, id) {
+    const responseMovie = await this.$axios.$post(
+      `/api/users/me/wishlist/${id}`,
+      null,
+      {
+        progress: false,
+      }
+    )
+    vuexContext.commit('addWishlist', responseMovie)
+    return responseMovie
+  },
+  async delWishlist(vuexContext, id) {
+    const responseMovie = await this.$axios.$delete(
+      `/api/users/me/wishlist/${id}`,
+      {
+        progress: false,
+      }
+    )
+    vuexContext.commit('delWishlist', id)
+    return responseMovie
   },
 }
 

@@ -15,30 +15,19 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        v-if="$store.state.auth.loggedIn"
-        class="no-active mr-1"
-        color="iconBg"
-        rounded
-        depressed
-        small
-        to="/cart"
-      >
-        <v-icon left>mdi-cart-outline</v-icon>
-        {{ $store.state.cart.length }}
-      </v-btn>
-
-      <v-btn
-        v-if="$store.state.auth.loggedIn"
-        class="no-active"
-        color="iconBg"
-        rounded
-        depressed
-        small
-        to="/wallet"
-      >
-        ${{ $store.getters.loggedInUser.coins }}
-      </v-btn>
+      <v-btn-toggle v-if="$store.state.auth.loggedIn" rounded>
+        <v-btn class="no-active" color="iconBg" depressed small to="/wishlist">
+          <v-icon left>mdi-clipboard-list-outline</v-icon>
+          {{ $store.getters.loggedInUser.wishlist.length }}
+        </v-btn>
+        <v-btn class="no-active" color="iconBg" depressed small to="/cart">
+          <v-icon left>mdi-cart-outline</v-icon>
+          {{ $store.state.cart.length }}
+        </v-btn>
+        <v-btn class="no-active" depressed outlined small to="/wallet">
+          ${{ $store.getters.loggedInUser.coins }}
+        </v-btn>
+      </v-btn-toggle>
 
       <meProfile v-if="$store.state.auth.loggedIn" />
 

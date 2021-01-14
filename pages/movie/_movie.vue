@@ -93,9 +93,17 @@
                                 movie.isOwned
                               "
                               @click="
-                                $store.state.auth.loggedIn ? '' : noAuth()
+                                $store.state.auth.loggedIn
+                                  ? wishlist(movie._id)
+                                  : noAuth()
                               "
                             >
+                              <v-icon v-if="isWishlist" left>
+                                mdi-check-circle
+                              </v-icon>
+                              <v-icon v-else left>
+                                mdi-checkbox-blank-circle-outline
+                              </v-icon>
                               Add to Wishlist
                             </v-btn>
                           </v-col>
@@ -278,6 +286,13 @@ export default {
     season: [],
     owned: [],
   }),
+  computed: {
+    isWishlist() {
+      return this.$store.getters.loggedInUser.wishlist.some(
+        (movie) => movie._id === this.$route.params.movie
+      )
+    },
+  },
   methods: {
     calcDiscount(price, percent) {
       const calc = price - (price / 100) * percent
@@ -295,6 +310,10 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    wishlist(id) {
+      if (this.isWishlist) this.$store.dispatch('delWishlist', id)
+      else this.$store.dispatch('addWishlist', id)
     },
     noAuth() {
       this.$store.commit('sethaveAccount', true)
