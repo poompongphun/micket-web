@@ -43,6 +43,10 @@
             <v-icon class="mr-3">mdi-cash-usd</v-icon>
             <v-list-item-title>Price</v-list-item-title>
           </v-list-item> -->
+            <v-list-item @click="ownedUser(movie._id)">
+              <v-icon class="mr-3">mdi-account-box-multiple</v-icon>
+              <v-list-item-title>Owned Users</v-list-item-title>
+            </v-list-item>
             <v-list-item @click="editMovie(movie._id)">
               <v-icon class="mr-3">mdi-pencil</v-icon>
               <v-list-item-title>Edit</v-list-item-title>
@@ -97,6 +101,9 @@ export default {
     //   this.$emit('publish', { id, publish: false })
     // },
     // editPrice(id) {},
+    ownedUser(id) {
+      this.$emit('owned', id)
+    },
     editMovie(id) {
       this.$emit('edit', id)
     },

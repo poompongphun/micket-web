@@ -48,6 +48,7 @@
                 @delete="doDelete"
                 @edit="openEditMovie"
                 @play="playVideo"
+                @owned="showOwnedUsers"
               />
             </v-col>
             <v-col
@@ -115,6 +116,7 @@
     </v-tabs-items>
     <editMovieDialog ref="editMovieDialog" @update="updateMovie" />
     <videoPlayer ref="videoPlayer" />
+    <ownedUsersDialog ref="ownedUsersDialog" />
   </div>
 </template>
 
@@ -122,11 +124,13 @@
 import videoBlock from '@/components/creator/videoBlock'
 import editMovieDialog from '@/components/creator/editMovieDialog'
 import videoPlayer from '@/components/creator/videoPlayer'
+import ownedUsersDialog from '@/components/creator/ownedUsersDialog'
 export default {
   components: {
     videoBlock,
     editMovieDialog,
     videoPlayer,
+    ownedUsersDialog,
   },
   async validate({ store, params }) {
     if (store.state.mystore.movieGroup.length === 0) {
@@ -162,6 +166,9 @@ export default {
     },
   },
   methods: {
+    showOwnedUsers(id) {
+      this.$refs.ownedUsersDialog.open(id)
+    },
     // Add new Season
     async newSeason(id) {
       const responseSeason = await this.$axios.$post(
