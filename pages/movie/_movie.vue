@@ -40,43 +40,18 @@
                         <v-row no-gutters>
                           <!-- Like & Dislike -->
                           <v-col cols="12" class="py-1">
-                            <v-row
-                              no-gutters
-                              justify="center"
-                              align="center"
-                              style="max-width: 190px"
-                            >
-                              <v-col cols="6">
-                                <v-btn
-                                  class="pa-0"
-                                  text
-                                  color="success"
-                                  x-large
-                                  rounded
-                                  @click="
-                                    $store.state.auth.loggedIn ? '' : noAuth()
-                                  "
-                                >
-                                  <v-icon left>mdi-thumb-up</v-icon>
-                                  9999
-                                </v-btn>
-                              </v-col>
-                              <v-col cols="6">
-                                <v-btn
-                                  class="pa-0"
-                                  text
-                                  color="grey"
-                                  x-large
-                                  rounded
-                                  @click="
-                                    $store.state.auth.loggedIn ? '' : noAuth()
-                                  "
-                                >
-                                  <v-icon left>mdi-thumb-down-outline</v-icon>
-                                  222
-                                </v-btn>
-                              </v-col>
-                            </v-row>
+                            <likeBtn
+                              :movie-id="movie._id"
+                              :like-detail="movie.like"
+                              :disable="
+                                ($store.getters.loggedInUser &&
+                                  movie.user_id._id ===
+                                    $store.getters.loggedInUser._id) ||
+                                owned.every(
+                                  (movies, i, arr) => movies.movie.length === 0
+                                )
+                              "
+                            />
                           </v-col>
 
                           <!-- Wishlist -->
@@ -162,7 +137,7 @@
                             depressed
                             @click="
                               $store.state.auth.loggedIn
-                                ? buyPack(season)
+                                ? buyPack(movie._id)
                                 : noAuth()
                             "
                           >
@@ -260,9 +235,11 @@
 
 <script>
 import movieSeason from '@/components/movie/movieSeason'
+import likeBtn from '@/components/items/likeBtn'
 export default {
   components: {
     movieSeason,
+    likeBtn,
   },
   async asyncData({ $axios, params, store }) {
     const responseMovie = await $axios.$get(
