@@ -4,7 +4,10 @@
       <v-row dense>
         <v-col cols="12" md="8">
           <v-card class="pa-2">
-            <h1>Cart</h1>
+            <h1 class="d-inline-block">Cart</h1>
+            <v-btn class="mt-1" color="warning" icon absolute right to="/bill">
+              <v-icon> mdi-history </v-icon>
+            </v-btn>
             <v-divider class="mb-2"></v-divider>
             <v-row no-gutters>
               <v-col cols="4" md="3" lg="3">Movie</v-col>
@@ -123,9 +126,12 @@
         <div class="d-flex center-in-img">
           <div class="no-movie navbar">
             <h2>Find your favorite movie :)</h2>
-            <v-btn class="my-3" color="primary" depressed to="/">
-              Go to Store
-            </v-btn>
+            <v-btn-toggle mandatory dense>
+              <v-btn color="primary" depressed to="/"> Go to Store </v-btn>
+              <v-btn color="warning" text to="/bill">
+                <v-icon> mdi-history </v-icon>
+              </v-btn>
+            </v-btn-toggle>
           </div>
         </div>
       </v-img>
