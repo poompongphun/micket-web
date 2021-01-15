@@ -95,7 +95,7 @@ export default {
   },
   mounted() {
     if (localStorage.darkMode !== undefined)
-      this.darkMode = localStorage.darkMode
+      this.darkMode = localStorage.darkMode === 'true'
   },
   methods: {
     async logout() {
