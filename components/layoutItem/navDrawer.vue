@@ -115,13 +115,20 @@ export default {
       return this.$vuetify.breakpoint.mdAndUp ? this.miniVariant : false
     },
   },
+  created() {
+    if (localStorage.drawerMini !== undefined) {
+      this.miniVariant = localStorage.drawerMini === 'true'
+    }
+  },
   methods: {
     async logout() {
       await this.$auth.logout()
     },
     showDrawer() {
       if (this.$vuetify.breakpoint.mdAndUp) {
-        this.miniVariant = !this.miniVariant
+        const value = !this.miniVariant
+        localStorage.drawerMini = value
+        this.miniVariant = value
         this.expandOnHover = !this.expandOnHover
       } else {
         this.forMobile = !this.forMobile

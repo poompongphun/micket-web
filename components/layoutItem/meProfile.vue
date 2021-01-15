@@ -89,8 +89,13 @@ export default {
   },
   watch: {
     darkMode(val) {
+      localStorage.darkMode = val
       this.$vuetify.theme.dark = val
     },
+  },
+  mounted() {
+    if (localStorage.darkMode !== undefined)
+      this.darkMode = localStorage.darkMode
   },
   methods: {
     async logout() {
