@@ -17,7 +17,7 @@
           v-if="
             season.movie.length === 0 && ownedMovie[i]
               ? ownedMovie[i].movie.length === 0
-              : false
+              : season.movie.length === 0
           "
           class="elevation-0"
           min-height="225"
