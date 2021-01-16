@@ -241,20 +241,24 @@ export default {
     movieSeason,
     likeBtn,
   },
-  async asyncData({ $axios, params, store }) {
-    const responseMovie = await $axios.$get(
-      `/api/store/movie/${params.movie}`,
-      { progress: false }
-    )
-    const ownedMovie = store.getters.loggedInUser
-      ? await $axios.$get(`/api/users/me/library/${params.movie}`, {
-          progress: false,
-        })
-      : []
-    return {
-      movie: responseMovie.movie,
-      season: responseMovie.season,
-      owned: ownedMovie,
+  async asyncData({ $axios, params, store, redirect }) {
+    try {
+      const responseMovie = await $axios.$get(
+        `/api/store/movie/${params.movie}`,
+        { progress: false }
+      )
+      const ownedMovie = store.getters.loggedInUser
+        ? await $axios.$get(`/api/users/me/library/${params.movie}`, {
+            progress: false,
+          })
+        : []
+      return {
+        movie: responseMovie.movie,
+        season: responseMovie.season,
+        owned: ownedMovie,
+      }
+    } catch (err) {
+      redirect('/')
     }
   },
   data: () => ({
