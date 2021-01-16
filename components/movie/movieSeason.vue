@@ -13,7 +13,22 @@
 
     <v-tabs-items v-model="tab" class="pt-3 defaultBg">
       <v-tab-item v-for="(season, i) in movieSeason" :key="i">
-        <v-card class="defaultBg" flat>
+        <v-card
+          v-if="
+            season.movie.length === 0 && ownedMovie[i]
+              ? ownedMovie[i].movie.length === 0
+              : false
+          "
+          class="elevation-0"
+          min-height="225"
+          align="center"
+        >
+          <v-card class="elevation-0 py-15 grey--text" width="300">
+            <v-icon left>mdi-movie-search</v-icon>
+            No Movie
+          </v-card>
+        </v-card>
+        <v-card v-else class="defaultBg" flat>
           <v-row dense>
             <v-col
               v-for="movie in season.movie"
