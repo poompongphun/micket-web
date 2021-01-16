@@ -9,10 +9,32 @@
     :close-on-content-click="false"
   >
     <template v-slot:activator="{ on }">
-      <v-card class="mx-1" :width="itemWidthResponsive" v-on="on">
+      <v-card
+        class="mx-1"
+        :width="itemWidthResponsive"
+        v-on="on"
+        @click="$router.push(`/movie/${movieDetail._id}`)"
+      >
         <v-img :src="movieDetail.poster.x" :height="imgHeightResponsive">
+          <div v-if="isWishlist" style="position: absolute">
+            <span
+              v-if="movieDetail !== 0"
+              class="py-1 px-3 white--text rounded-r-lg font-weight-bold primary"
+              style="opacity: 0.8"
+            >
+              On Wishlist
+            </span>
+          </div>
           <div class="text-right">
             <span
+              v-if="movieDetail !== 0"
+              class="py-1 px-3 green--text text--accent-3 rounded-l-lg font-weight-bold"
+              style="background-color: rgba(0, 0, 0, 0.4)"
+            >
+              ${{ calcDiscount(movieDetail.price, movieDetail.discount) }}
+            </span>
+            <span
+              v-else
               class="py-1 px-3 white--text rounded-l-lg font-weight-bold"
               style="background-color: rgba(0, 0, 0, 0.4)"
             >
@@ -31,23 +53,30 @@
         ></v-img>
         <div class="pa-2">
           <div class="mt-1 mb-3">
-            <v-tooltip v-for="btn in menuBtn" :key="btn.index" bottom>
+            <v-tooltip v-for="btn in menuBtn" :key="btn.id" bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   class="mr-1"
                   color="iconBg"
                   :small="btnMenuResponsive"
+                  :disabled="
+                    btn.id === 3 &&
+                    movieDetail.user_id._id === $store.getters.loggedInUser._id
+                  "
                   fab
                   depressed
                   v-bind="attrs"
                   v-on="on"
                   @click="
                     btn.auth || $store.state.auth.loggedIn
-                      ? $router.push(`/movie/${movieDetail._id}`)
+                      ? clickBtn(btn.id, movieDetail._id)
                       : noAuth()
                   "
                 >
-                  <v-icon>{{ btn.icon }}</v-icon>
+                  <v-icon v-if="btn.id === 3">
+                    {{ isWishlist ? btn.icon1 : btn.icon }}
+                  </v-icon>
+                  <v-icon v-else>{{ btn.icon }}</v-icon>
                 </v-btn>
               </template>
               <span>{{ btn.tooltip }}</span>
@@ -59,14 +88,16 @@
             </span>
             <span class="font-weight-bold success--text">
               <!-- {{ toFixed((movieDetail.like * 100) / movieDetail.own_count) }} -->
-              20 % Likes
+              {{
+                calcPercent(movieDetail.like.like, movieDetail.like.dislike)
+              }}% Likes
             </span>
           </v-row>
           <div class="mb-2">
             <v-chip
               v-for="tag in movieDetail.detail.tag"
               :key="tag"
-              class="ml-1"
+              class="ml-1 mb-1"
               :x-small="btnMenuResponsive"
             >
               {{ tag }}
@@ -128,16 +159,13 @@ export default {
   },
   data: () => ({
     menuBtn: [
-      { icon: 'mdi-play-outline', tooltip: 'Play Trailer', auth: true },
-      { icon: 'mdi-storefront-outline', tooltip: 'Store', auth: true },
+      { id: 1, icon: 'mdi-play-outline', tooltip: 'Play Trailer', auth: true },
+      { id: 2, icon: 'mdi-storefront-outline', tooltip: 'Store', auth: true },
       {
-        icon: 'mdi-thumb-up-outline',
-        tooltip: 'Like',
-        auth: false,
-      },
-      {
-        icon: 'mdi-thumb-down-outline',
-        tooltip: 'Dislike',
+        id: 3,
+        icon: 'mdi-plus',
+        icon1: 'mdi-minus',
+        tooltip: 'Add to Wishlist',
         auth: false,
       },
     ],
@@ -168,6 +196,13 @@ export default {
         ? this.menuSizeMobile > 1.1
         : false
     },
+    isWishlist() {
+      return this.$store.getters.loggedInUser
+        ? this.$store.getters.loggedInUser.wishlist.some(
+            (movie) => movie._id === this.movieDetail._id
+          )
+        : false
+    },
     // imgHeightResponsive() {
     //   return this.$vuetify.breakpoint.smAndDown
     //     ? this.imgHeight / this.itemSizeMobile
@@ -181,6 +216,23 @@ export default {
     },
     noAuth() {
       this.$store.commit('sethaveAccount', true)
+    },
+    calcPercent(like, dislike) {
+      const percent = (like / (dislike + like)) * 100
+      return parseInt(percent) || 0
+    },
+    clickBtn(id, movieId) {
+      id === 3
+        ? this.addToList(movieId)
+        : this.$router.push(`/movie/${movieId}`)
+    },
+    addToList(id) {
+      if (this.isWishlist) this.$store.dispatch('delWishlist', id)
+      else this.$store.dispatch('addWishlist', id)
+    },
+    calcDiscount(price, percent) {
+      const calc = price - (price / 100) * percent
+      return calc.toFixed(2)
     },
   },
 }
