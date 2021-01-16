@@ -10,7 +10,9 @@
       <v-tab v-for="(season, i) in movieSeason" :key="i">
         {{ season.name }}
         <v-icon
-          v-if="season.movie.length === 0 && tab !== 0"
+          v-if="
+            season.movie.length === 0 && tab !== 0 && uploadCom.length === 0
+          "
           right
           small
           @click="closeTab(i, season._id)"
@@ -44,8 +46,8 @@
             >
               <videoBlock
                 :movie="movie"
-                @publish="doPublish"
-                @delete="doDelete"
+                @publish="doPublish($event, tab)"
+                @delete="doDelete($event, tab)"
                 @edit="openEditMovie"
                 @play="playVideo"
                 @owned="showOwnedUsers"
@@ -114,7 +116,7 @@
         />
       </v-tab-item>
     </v-tabs-items>
-    <editMovieDialog ref="editMovieDialog" @update="updateMovie" />
+    <editMovieDialog ref="editMovieDialog" @update="updateMovie($event, tab)" />
     <videoPlayer ref="videoPlayer" />
     <ownedUsersDialog ref="ownedUsersDialog" />
   </div>
@@ -189,23 +191,23 @@ export default {
       )
       if (responseSeason) this.movieSeason.splice(index, 1)
     },
-    doPublish(val) {
-      const MovieIndex = this.movieSeason[this.tab].movie.findIndex(
+    doPublish(val, tab) {
+      const MovieIndex = this.movieSeason[tab].movie.findIndex(
         (movie) => movie._id === val.id
       )
-      this.movieSeason[this.tab].movie[MovieIndex].public = val.publish
+      this.movieSeason[tab].movie[MovieIndex].public = val.publish
     },
-    async doDelete(id) {
+    async doDelete(id, tab) {
       try {
         const responseDelete = await this.$axios.$delete(
           `/api/creator/movie/${id}`,
           { progress: false }
         )
         if (responseDelete) {
-          const MovieIndex = this.movieSeason[this.tab].movie.findIndex(
+          const MovieIndex = this.movieSeason[tab].movie.findIndex(
             (movie) => movie._id === id
           )
-          this.movieSeason[this.tab].movie.splice(MovieIndex, 1)
+          this.movieSeason[tab].movie.splice(MovieIndex, 1)
         }
       } catch (error) {
         console.log(error)
@@ -214,13 +216,13 @@ export default {
     openEditMovie(id) {
       this.$refs.editMovieDialog.open(id)
     },
-    updateMovie(val) {
+    updateMovie(val, tab) {
       const id = val.id
       const movieUpdate = val.data
-      const MovieIndex = this.movieSeason[this.tab].movie.findIndex(
+      const MovieIndex = this.movieSeason[tab].movie.findIndex(
         (movie) => movie._id === id
       )
-      this.movieSeason[this.tab].movie.splice(MovieIndex, 1, movieUpdate)
+      this.movieSeason[tab].movie.splice(MovieIndex, 1, movieUpdate)
     },
     // Click to Upload
     clickUpload(ref) {
