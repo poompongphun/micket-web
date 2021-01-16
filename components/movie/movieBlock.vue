@@ -60,6 +60,7 @@
                   color="iconBg"
                   :small="btnMenuResponsive"
                   :disabled="
+                    $store.getters.loggedInUser &&
                     btn.id === 3 &&
                     movieDetail.user_id._id === $store.getters.loggedInUser._id
                   "
