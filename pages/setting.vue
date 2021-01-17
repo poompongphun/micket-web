@@ -25,13 +25,13 @@ export default {
   },
   methods: {
     async beComeCreator() {
-      const response = await this.$axios.post('/api/creator/join')
-      this.$store.getters.loggedInUser.creator = response.data.message.creator
-      this.$store.commit('useCoins', this.price)
+      await this.$store.dispatch('beCreator', { join: true, price: this.price })
     },
     async cancelCreator() {
-      const response = await this.$axios.delete('/api/creator/join')
-      this.$store.getters.loggedInUser.creator = response.data.message.creator
+      await this.$store.dispatch('beCreator', {
+        join: false,
+        price: this.price,
+      })
     },
   },
 }

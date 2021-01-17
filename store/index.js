@@ -15,6 +15,11 @@ export const mutations = {
     const usedCoins = state.auth.user.coins - parseFloat(coins)
     state.auth.user.coins = usedCoins.toFixed(2)
   },
+
+  setCreator(state, join) {
+    state.auth.user.creator = join
+  },
+
   sethaveAccount(state, bool) {
     state.haveAccount = bool
   },
@@ -49,6 +54,20 @@ export const actions = {
   },
   deleteCart(vuexContext, id) {
     vuexContext.commit('deleteCart', id)
+  },
+  async beCreator({ commit }, value) {
+    const isJoin = value.join
+    const price = value.price
+    const option = {
+      progress: false,
+    }
+    const response = isJoin
+      ? await this.$axios.$post('/api/creator/join', null, option)
+      : await this.$axios.$delete('/api/creator/join', option)
+    if (isJoin) commit('useCoins', price)
+
+    commit('setCreator', response.message.creator)
+    return response.message.creator
   },
   async getLibrary({ commit }) {
     const responseMovie = await this.$axios.$get(`/api/users/me/library/`, {

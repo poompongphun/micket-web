@@ -19,7 +19,7 @@
               ? ownedMovie[i].movie.length === 0
               : season.movie.length === 0
           "
-          class="elevation-0"
+          class="elevation-0 defaultBg"
           min-height="225"
           align="center"
         >

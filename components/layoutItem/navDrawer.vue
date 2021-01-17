@@ -42,7 +42,11 @@
 
       <v-list-item
         v-for="item in items"
-        v-show="item.show"
+        v-show="
+          item.id === 3
+            ? item.show && $store.getters.loggedInUser.creator
+            : item.show
+        "
         :key="item.title"
         color="primary"
         link
@@ -86,20 +90,26 @@ export default {
       expandOnHover: true,
       forMobile: false,
       items: [
-        { title: 'Store', icon: 'mdi-storefront', links: '/', show: true },
         {
+          id: 1,
+          title: 'Store',
+          icon: 'mdi-storefront',
+          links: '/',
+          show: true,
+        },
+        {
+          id: 2,
           title: 'Library',
           icon: 'mdi-filmstrip-box',
           links: '/library',
           show: this.$store.state.auth.loggedIn,
         },
         {
+          id: 3,
           title: 'My Store',
           icon: 'mdi-briefcase',
           links: '/mystore',
-          show:
-            this.$store.state.auth.loggedIn &&
-            this.$store.getters.loggedInUser.creator,
+          show: this.$store.state.auth.loggedIn,
         },
         // { title: 'Friends', icon: 'mdi-account-group', links: '/friends' },
         // { title: 'About', icon: 'mdi-help-box' },
