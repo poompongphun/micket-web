@@ -18,13 +18,20 @@
         <v-list>
           <v-list-item>
             <v-list-item-avatar>
-              <img :src="profileImg" :alt="meName" />
+              <img :src="profileImg" :alt="$store.getters.loggedInUser.name" />
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title>{{ meName.toUpperCase() }}</v-list-item-title>
-              <v-list-item-subtitle v-if="meName !== meUsername">
-                {{ meUsername }}
+              <v-list-item-title>{{
+                $store.getters.loggedInUser.name.toUpperCase()
+              }}</v-list-item-title>
+              <v-list-item-subtitle
+                v-if="
+                  $store.getters.loggedInUser.name !==
+                  $store.getters.loggedInUser.username
+                "
+              >
+                {{ $store.getters.loggedInUser.username }}
               </v-list-item-subtitle>
             </v-list-item-content>
 
@@ -82,8 +89,8 @@ export default {
     return {
       profileImg:
         'https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png',
-      meName: this.$store.getters.loggedInUser.name,
-      meUsername: this.$store.getters.loggedInUser.username,
+      // meName: this.$store.getters.loggedInUser.name,
+      // meUsername: this.$store.getters.loggedInUser.username,
       darkMode: false,
     }
   },

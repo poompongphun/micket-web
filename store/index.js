@@ -7,6 +7,11 @@ export const state = () => ({
 })
 
 export const mutations = {
+  updateMe(state, value) {
+    state.auth.user.name = value.name
+    state.auth.user.username = value.username
+    state.auth.user.description = value.description
+  },
   addCoins(state, coins) {
     const addedCoins = state.auth.user.coins + parseFloat(coins)
     state.auth.user.coins = addedCoins.toFixed(2)
@@ -49,6 +54,21 @@ export const mutations = {
 }
 
 export const actions = {
+  async updateMyInfo({ commit }, data) {
+    try {
+      const responseUser = await this.$axios.$patch(`/api/users/me`, data, {
+        progress: false,
+      })
+      if (responseUser) commit('updateMe', responseUser)
+      return responseUser
+    } catch (error) {
+      commit('setAlert', {
+        color: 'error',
+        text: error.response.data,
+        icon: 'mdi-alert',
+      })
+    }
+  },
   addCart(vuexContext, movie) {
     vuexContext.commit('addCart', movie)
   },
