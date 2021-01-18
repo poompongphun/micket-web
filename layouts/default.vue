@@ -3,19 +3,19 @@
     <v-app-bar color="navbar" app clipped-left flat>
       <v-app-bar-nav-icon @click.stop="showDrawer"></v-app-bar-nav-icon>
 
-      <v-btn class="text-capitalize no-active" text rounded to="/">
-        <v-img :src="require('~/assets/logo/Micket.svg')" width="50"></v-img>
-        <v-toolbar-title
-          v-if="!$vuetify.breakpoint.xsOnly"
-          class="font-weight-bold ml-2"
-        >
+      <v-btn class="text-capitalize no-active px-2" text rounded to="/">
+        <v-img :src="require('~/assets/logo/Micket.svg')" width="30"></v-img>
+        <v-toolbar-title class="font-weight-bold ml-1">
           Micket
         </v-toolbar-title>
       </v-btn>
 
       <v-spacer></v-spacer>
 
-      <v-btn-toggle v-if="$store.state.auth.loggedIn" rounded>
+      <v-btn-toggle
+        v-if="$store.state.auth.loggedIn && $vuetify.breakpoint.mdAndUp"
+        rounded
+      >
         <v-btn class="no-active" color="iconBg" depressed small to="/wishlist">
           <v-icon left>mdi-clipboard-list-outline</v-icon>
           {{ $store.getters.loggedInUser.wishlist.length }}
@@ -32,8 +32,25 @@
       <meProfile v-if="$store.state.auth.loggedIn" />
 
       <div v-else>
-        <v-btn color="primary" to="/signin" rounded depressed>Sign In</v-btn>
-        <v-btn color="primary" to="/signup" rounded depressed>Sign Up</v-btn>
+        <div v-if="$vuetify.breakpoint.mdAndUp">
+          <v-btn color="primary" to="/signin" rounded depressed>
+            <v-icon left>mdi-login</v-icon>
+            Sign In
+          </v-btn>
+          <v-btn color="primary" to="/signup" rounded depressed>
+            <v-icon left>mdi-account-plus-outline</v-icon>
+            Sign Up
+          </v-btn>
+        </div>
+
+        <div v-else>
+          <v-btn color="primary" icon to="/signin">
+            <v-icon>mdi-login</v-icon>
+          </v-btn>
+          <v-btn color="primary" icon to="/signup">
+            <v-icon>mdi-account-plus-outline</v-icon>
+          </v-btn>
+        </div>
       </div>
     </v-app-bar>
 

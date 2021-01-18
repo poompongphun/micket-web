@@ -14,11 +14,11 @@
     <v-list dense nav class="py-0 mt-2">
       <v-list-item v-if="$vuetify.breakpoint.smAndDown">
         <v-app-bar-nav-icon @click.stop="showDrawer"></v-app-bar-nav-icon>
-        <v-btn class="text-capitalize no-active" text rounded to="/">
+        <v-btn class="text-capitalize no-active px-2" text rounded to="/">
           <v-img
-            class="mr-2"
+            class="mr-1"
             :src="require('~/assets/logo/Micket.svg')"
-            width="50"
+            width="30"
           ></v-img>
           <v-toolbar-title class="font-weight-bold">Micket</v-toolbar-title>
         </v-btn>

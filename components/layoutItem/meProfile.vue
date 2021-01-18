@@ -45,6 +45,34 @@
 
         <v-divider></v-divider>
 
+        <v-row
+          v-if="$vuetify.breakpoint.smAndDown"
+          align="center"
+          justify="center"
+          no-gutters
+        >
+          <v-col cols="4">
+            <v-btn text block depressed small to="/wishlist">
+              <v-icon left>mdi-clipboard-list-outline</v-icon>
+              {{ $store.getters.loggedInUser.wishlist.length }}
+            </v-btn>
+          </v-col>
+          <v-col cols="4">
+            <v-btn text block depressed small to="/cart">
+              <v-icon left>mdi-cart-outline</v-icon>
+              {{ $store.state.cart.length }}
+            </v-btn>
+          </v-col>
+          <v-col cols="4">
+            <v-btn text block depressed small to="/wallet">
+              <v-icon left>mdi-currency-usd-circle-outline</v-icon>
+              ${{ $store.getters.loggedInUser.coins }}
+            </v-btn>
+          </v-col>
+        </v-row>
+
+        <v-divider></v-divider>
+
         <v-list>
           <v-list-item @click="darkMode = !darkMode">
             <v-icon class="mr-3 iconBg pa-2 rounded-circle">
