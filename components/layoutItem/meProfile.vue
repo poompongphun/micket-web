@@ -9,7 +9,12 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn icon dark v-bind="attrs" v-on="on">
           <v-avatar color="primary" size="35">
-            <v-img :src="profileImg" />
+            <v-img
+              :src="
+                $store.getters.loggedInUser.profile ||
+                require('~/assets/profile/MicketProfile.png')
+              "
+            />
           </v-avatar>
         </v-btn>
       </template>
@@ -18,7 +23,13 @@
         <v-list>
           <v-list-item>
             <v-list-item-avatar>
-              <img :src="profileImg" :alt="$store.getters.loggedInUser.name" />
+              <img
+                :src="
+                  $store.getters.loggedInUser.profile ||
+                  require('~/assets/profile/MicketProfile.png')
+                "
+                :alt="$store.getters.loggedInUser.name"
+              />
             </v-list-item-avatar>
 
             <v-list-item-content>

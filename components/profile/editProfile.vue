@@ -36,12 +36,7 @@
               </v-row>
             </template>
           </v-img>
-          <v-avatar class="user-avatar" size="100" color="iconBg">
-            <img
-              src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png"
-              alt="alt"
-            />
-          </v-avatar>
+          <avatar class="user-avatar" />
         </div>
         <v-card-text class="mt-15">
           <v-form action="#" autocomplete="off">
@@ -150,6 +145,7 @@
 </template>
 
 <script>
+import avatar from '@/components/profile/avatar'
 import { validationMixin } from 'vuelidate'
 import {
   required,
@@ -158,7 +154,11 @@ import {
   helpers,
 } from 'vuelidate/lib/validators'
 const alpha = helpers.regex('alpha', /^[a-zA-Z0-9]+$/)
+
 export default {
+  components: {
+    avatar,
+  },
   mixins: [validationMixin],
 
   validations: {

@@ -7,6 +7,9 @@ export const state = () => ({
 })
 
 export const mutations = {
+  updateProfile(state, profile) {
+    state.auth.user.profile = profile
+  },
   updateMe(state, value) {
     state.auth.user.name = value.name
     state.auth.user.username = value.username
@@ -54,6 +57,30 @@ export const mutations = {
 }
 
 export const actions = {
+  async updateProfile({ commit }, file) {
+    try {
+      const formData = new FormData()
+      formData.append('profile', file)
+      const responseProfile = await this.$axios.$post(
+        `/api/users/me/profile`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          progress: false,
+        }
+      )
+      commit('updateProfile', responseProfile.profile)
+      return responseProfile.profile
+    } catch (error) {
+      commit('setAlert', {
+        color: 'error',
+        text: error.response.data,
+        icon: 'mdi-alert',
+      })
+    }
+  },
   async updateMyInfo({ commit }, data) {
     try {
       const responseUser = await this.$axios.$patch(`/api/users/me`, data, {
