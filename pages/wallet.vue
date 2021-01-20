@@ -60,7 +60,9 @@
 <script>
 export default {
   name: 'HelloWorld',
-
+  validate({ store }) {
+    return store.state.auth.loggedIn
+  },
   data: () => ({
     // money: this.$store.getters.loggedInUser.coins,
     banks: [100, 200, 300, 500, 750, 1000, 1500, 2000],

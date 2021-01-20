@@ -141,6 +141,9 @@
 
 <script>
 export default {
+  validate({ store }) {
+    return store.state.auth.loggedIn
+  },
   data: () => ({
     cart: [],
   }),

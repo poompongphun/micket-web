@@ -65,6 +65,9 @@ export default {
   components: {
     bills,
   },
+  validate({ store }) {
+    return store.state.auth.loggedIn
+  },
   async asyncData({ $axios }) {
     const responseMovie = await $axios.$get(`/api/users/me/bill`, {
       progress: false,
