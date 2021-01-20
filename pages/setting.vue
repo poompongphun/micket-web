@@ -1,38 +1,27 @@
 <template>
   <div>
-    <h2>Setting</h2>
-    <h4>Become Movie Creator</h4>
-    <v-btn
-      v-if="!$store.getters.loggedInUser.creator"
-      color="success"
-      outlined
-      @click="beComeCreator"
-    >
-      Become seller ${{ price }}/Month
-    </v-btn>
-    <v-btn v-else color="red" outlined @click="cancelCreator"> Cancel </v-btn>
+    <h1>Setting</h1>
+    <v-divider></v-divider>
+    <div class="py-3">
+      <changeEmail />
+      <changePassword />
+      <beComeCreator />
+    </div>
   </div>
 </template>
 
 <script>
+import changeEmail from '@/components/setting/changeEmail'
+import changePassword from '@/components/setting/changePassword'
+import beComeCreator from '@/components/setting/becomeCreator'
 export default {
-  data: () => ({
-    price: 0,
-  }),
-  async mounted() {
-    const response = await this.$axios.get('/api/creator/join/price')
-    this.price = response.data.price
+  components: {
+    changeEmail,
+    changePassword,
+    beComeCreator,
   },
-  methods: {
-    async beComeCreator() {
-      await this.$store.dispatch('beCreator', { join: true, price: this.price })
-    },
-    async cancelCreator() {
-      await this.$store.dispatch('beCreator', {
-        join: false,
-        price: this.price,
-      })
-    },
+  validate({ store }) {
+    return store.state.auth.loggedIn
   },
 }
 </script>
