@@ -30,5 +30,10 @@ export default {
   data: () => ({
     show: false,
   }),
+  methods: {
+    expand(bool) {
+      this.show = bool
+    },
+  },
 }
 </script>
