@@ -15,6 +15,9 @@ export const mutations = {
     state.auth.user.username = value.username
     state.auth.user.description = value.description
   },
+  updateMail(state, mail) {
+    state.auth.user.email = mail
+  },
   addCoins(state, coins) {
     const addedCoins = state.auth.user.coins + parseFloat(coins)
     state.auth.user.coins = addedCoins.toFixed(2)
@@ -94,6 +97,33 @@ export const actions = {
         text: error.response.data,
         icon: 'mdi-alert',
       })
+    }
+  },
+  async updateMail({ commit }, mail) {
+    try {
+      const responseMail = await this.$axios.$post(
+        `/api/users/me/email`,
+        { email: mail },
+        {
+          progress: false,
+        }
+      )
+      if (responseMail) {
+        commit('updateMail', responseMail.email)
+        commit('setAlert', {
+          color: 'success',
+          text: 'Changed Email',
+          icon: 'mdi-checkbox-marked-circle',
+        })
+      }
+      return true
+    } catch (error) {
+      commit('setAlert', {
+        color: 'error',
+        text: error.response.data,
+        icon: 'mdi-alert',
+      })
+      return false
     }
   },
   addCart(vuexContext, movie) {

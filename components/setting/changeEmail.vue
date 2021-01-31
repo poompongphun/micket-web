@@ -36,7 +36,7 @@
               color="primary white--text"
               rounded
               depressed
-              @click="disable = true"
+              @click="changeMail(email)"
             >
               Save
             </v-btn>
@@ -59,6 +59,18 @@ export default {
   }),
   mounted() {
     this.email = this.$store.getters.loggedInUser.email
+  },
+  methods: {
+    async changeMail(mail) {
+      if (mail !== this.$store.getters.loggedInUser.email) {
+        const update = await this.$store.dispatch('updateMail', mail)
+        if (update) {
+          this.disable = true
+        }
+      } else {
+        this.disable = true
+      }
+    },
   },
 }
 </script>
