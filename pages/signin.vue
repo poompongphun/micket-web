@@ -46,14 +46,21 @@
       >
         Login
         <template v-slot:loader>
-          <span>Logging in...</span>
+          <span>Logging in</span>
+          <v-progress-circular
+            class="ml-2"
+            indeterminate
+            color="secondary"
+            :size="15"
+            :width="2"
+          ></v-progress-circular>
         </template>
       </v-btn>
-      <p class="social-text">Or Sign in with social platforms</p>
+      <p class="social-text">Forgot Password?</p>
       <div class="social-media">
-        <v-btn class="mx-2" color="dark" outlined fab depressed>
+        <!-- <v-btn class="mx-2" color="dark" outlined fab depressed>
           <v-icon>mdi-facebook</v-icon>
-        </v-btn>
+        </v-btn> -->
         <v-btn
           class="mx-2"
           color="dark"
@@ -64,9 +71,9 @@
         >
           <v-icon>mdi-lock-question</v-icon>
         </v-btn>
-        <v-btn class="mx-2" color="dark" outlined fab depressed>
+        <!-- <v-btn class="mx-2" color="dark" outlined fab depressed>
           <v-icon>mdi-google</v-icon>
-        </v-btn>
+        </v-btn> -->
       </div>
     </v-form>
     <forgotPassDialog ref="forgotPassDialog" />

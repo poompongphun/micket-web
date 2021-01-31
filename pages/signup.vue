@@ -64,6 +64,7 @@
     <v-btn
       class="py-6 px-12 white--text"
       color="#5995fd"
+      :loading="registering"
       :disabled="
         $v.$invalid || errorEmail.length !== 0 || errorName.length !== 0
       "
@@ -72,8 +73,18 @@
       @click="submit"
     >
       Sign up
+      <template v-slot:loader>
+        <span>Registering</span>
+        <v-progress-circular
+          class="ml-2"
+          indeterminate
+          color="secondary"
+          :size="15"
+          :width="2"
+        ></v-progress-circular>
+      </template>
     </v-btn>
-    <p class="social-text">Or Sign up with social platforms</p>
+    <!-- <p class="social-text">Or Sign up with social platforms</p>
     <div class="social-media">
       <v-btn class="mx-2" color="dark" outlined fab depressed>
         <v-icon>mdi-facebook</v-icon>
@@ -84,7 +95,7 @@
       <v-btn class="mx-2" color="dark" outlined fab depressed>
         <v-icon>mdi-google</v-icon>
       </v-btn>
-    </div>
+    </div> -->
   </v-form>
 </template>
 
