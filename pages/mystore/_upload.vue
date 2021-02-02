@@ -210,7 +210,11 @@ export default {
           this.movieSeason[tab].movie.splice(MovieIndex, 1)
         }
       } catch (error) {
-        console.log(error)
+        this.$store.commit('setAlert', {
+          color: 'error',
+          text: error.response.data,
+          icon: 'mdi-alert',
+        })
       }
     },
     openEditMovie(id) {

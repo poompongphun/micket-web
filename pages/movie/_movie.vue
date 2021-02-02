@@ -291,7 +291,11 @@ export default {
           this.$router.push('/library')
         }
       } catch (error) {
-        console.log(error)
+        this.$store.commit('setAlert', {
+          color: 'error',
+          text: error.response.data,
+          icon: 'mdi-alert',
+        })
       }
     },
     wishlist(id) {

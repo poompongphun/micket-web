@@ -266,7 +266,11 @@ export default {
           // this.$emit('delete', id)
         }
       } catch (error) {
-        console.log(error)
+        this.$store.commit('setAlert', {
+          color: 'error',
+          text: error.response.data,
+          icon: 'mdi-alert',
+        })
       }
     },
     async publish(id, state) {
