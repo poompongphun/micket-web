@@ -48,6 +48,32 @@ export default {
   axios: {
     baseURL: process.env.API_URI || '',
   },
+  /*
+   ** PWA module configuration
+   ** See https://pwa.nuxtjs.org/
+   */
+  pwa: {
+    icon: {
+      fileName: 'icon.png',
+      sizes: [36, 48, 72, 96, 144, 192, 256, 384, 512],
+      purpose: 'maskable any',
+    },
+    meta: {
+      charset: 'UTF-8',
+      viewport: 'width=device-width, initial-scale=1.0',
+      mobileApp: true,
+      mobileAppIOS: true,
+      name: 'Micket',
+      author: 'Poom',
+      lang: 'en',
+    },
+    manifest: {
+      name: 'Micket',
+      short_name: 'Micket',
+      display: 'standalone',
+      lang: 'en',
+    },
+  },
 
   // router: {
   //   middleware: ['auth'],
