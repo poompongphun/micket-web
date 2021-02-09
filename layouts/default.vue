@@ -31,27 +31,43 @@
 
       <meProfile v-if="$store.state.auth.loggedIn" />
 
-      <div v-else>
-        <div v-if="$vuetify.breakpoint.mdAndUp">
-          <v-btn color="primary" to="/signin" rounded depressed>
-            <v-icon left>mdi-login</v-icon>
-            Sign In
-          </v-btn>
-          <v-btn color="primary" to="/signup" rounded depressed>
-            <v-icon left>mdi-account-plus-outline</v-icon>
-            Sign Up
-          </v-btn>
-        </div>
+      <v-btn
+        v-if="$vuetify.breakpoint.mdAndUp && !$store.state.auth.loggedIn"
+        color="primary"
+        to="/signin"
+        rounded
+        depressed
+      >
+        <v-icon left>mdi-login</v-icon>
+        Sign In
+      </v-btn>
+      <v-btn
+        v-else-if="!$store.state.auth.loggedIn"
+        color="primary"
+        icon
+        to="/signin"
+      >
+        <v-icon>mdi-login</v-icon>
+      </v-btn>
 
-        <div v-else>
-          <v-btn color="primary" icon to="/signin">
-            <v-icon>mdi-login</v-icon>
-          </v-btn>
-          <v-btn color="primary" icon to="/signup">
-            <v-icon>mdi-account-plus-outline</v-icon>
-          </v-btn>
-        </div>
-      </div>
+      <v-btn
+        v-if="$vuetify.breakpoint.mdAndUp && !$store.state.auth.loggedIn"
+        color="primary"
+        to="/signup"
+        rounded
+        depressed
+      >
+        <v-icon left>mdi-account-plus-outline</v-icon>
+        Sign Up
+      </v-btn>
+      <v-btn
+        v-else-if="!$store.state.auth.loggedIn"
+        color="primary"
+        icon
+        to="/signup"
+      >
+        <v-icon>mdi-account-plus-outline</v-icon>
+      </v-btn>
     </v-app-bar>
 
     <navDrawer ref="drawer" />
