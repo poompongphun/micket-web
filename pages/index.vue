@@ -1,16 +1,5 @@
 <template>
   <div>
-    <v-text-field
-      name="search"
-      label="Search"
-      class="mb-3"
-      block
-      filled
-      rounded
-      dense
-      hide-details
-      append-icon="mdi-magnify"
-    ></v-text-field>
     <promoteSlide />
     <h2 class="py-2">Recommended</h2>
     <v-slide-group

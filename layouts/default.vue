@@ -10,7 +10,7 @@
         </v-toolbar-title>
       </v-btn>
 
-      <v-spacer></v-spacer>
+      <search />
 
       <v-btn-toggle
         v-if="$store.state.auth.loggedIn && $vuetify.breakpoint.mdAndUp"
@@ -97,11 +97,13 @@
 <script>
 import meProfile from '@/components/layoutItem/meProfile'
 import navDrawer from '@/components/layoutItem/navDrawer'
+import search from '@/components/layoutItem/search'
 import haveAccountDialog from '@/components/items/haveAccountDialog'
 export default {
   components: {
     meProfile,
     navDrawer,
+    search,
     haveAccountDialog,
   },
   data: () => ({
