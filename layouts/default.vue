@@ -14,17 +14,18 @@
 
       <v-btn-toggle
         v-if="$store.state.auth.loggedIn && $vuetify.breakpoint.mdAndUp"
+        class="grey lighten-1"
         rounded
       >
-        <v-btn class="no-active" color="iconBg" depressed small to="/wishlist">
+        <v-btn class="no-active no-border" depressed small to="/wishlist">
           <v-icon left>mdi-clipboard-list-outline</v-icon>
           {{ $store.getters.loggedInUser.wishlist.length }}
         </v-btn>
-        <v-btn class="no-active" color="iconBg" depressed small to="/cart">
+        <v-btn class="no-active no-border" depressed small to="/cart">
           <v-icon left>mdi-cart-outline</v-icon>
           {{ $store.state.cart.length }}
         </v-btn>
-        <v-btn class="no-active" depressed outlined small to="/wallet">
+        <v-btn class="no-active no-border" depressed small to="/wallet">
           ${{ $store.getters.loggedInUser.coins }}
         </v-btn>
       </v-btn-toggle>
@@ -162,3 +163,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.no-border {
+  border: none !important;
+}
+</style>

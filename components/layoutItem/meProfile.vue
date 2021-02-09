@@ -54,10 +54,11 @@
           </v-list-item>
         </v-list>
 
-        <v-divider></v-divider>
+        <v-divider v-if="$vuetify.breakpoint.mdAndUp"></v-divider>
 
         <v-row
           v-if="$vuetify.breakpoint.smAndDown"
+          class="iconBg rounded-pill mx-2"
           align="center"
           justify="center"
           no-gutters
@@ -82,7 +83,7 @@
           </v-col>
         </v-row>
 
-        <v-divider></v-divider>
+        <!-- <v-divider></v-divider> -->
 
         <v-list>
           <v-list-item @click="darkMode = !darkMode">

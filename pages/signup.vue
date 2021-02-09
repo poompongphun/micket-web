@@ -1,5 +1,9 @@
 <template>
-  <v-form action="#" class="custom-form sign-up-form" autocomplete="off">
+  <v-form
+    class="custom-form sign-up-form"
+    autocomplete="off"
+    @submit.prevent="submit"
+  >
     <h1 class="authTitle normalText--text">Sign up</h1>
     <v-text-field
       v-model.trim="username"
@@ -63,6 +67,7 @@
     </v-alert>
     <v-btn
       class="py-6 px-12 white--text"
+      type="submit"
       color="#5995fd"
       :loading="registering"
       :disabled="
@@ -70,7 +75,6 @@
       "
       rounded
       depressed
-      @click="submit"
     >
       Sign up
       <template v-slot:loader>

@@ -1,6 +1,10 @@
 <template>
   <div>
-    <v-form action="#" class="custom-form sign-in-form" autocomplete="off">
+    <v-form
+      class="custom-form sign-in-form"
+      autocomplete="off"
+      @submit.prevent="submitLogin(username, password)"
+    >
       <h2 class="authTitle normalText--text">Sign in</h2>
       <v-text-field
         v-model="username"
@@ -37,12 +41,12 @@
       </v-alert>
       <v-btn
         class="py-6 px-12 white--text"
+        type="submit"
         color="#5995fd"
         :loading="logingIn"
         :disabled="logingIn || username === '' || password === ''"
         rounded
         depressed
-        @click.stop="submitLogin(username, password)"
       >
         Login
         <template v-slot:loader>
