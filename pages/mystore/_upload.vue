@@ -251,7 +251,7 @@ export default {
         const uploadMovie = await this.$axios.$post(
           `/api/creator/movie/${groupId}/${seasonId}`,
           formData,
-          { progress: false }
+          { progress: false, timeout: 10 * 60 * 1000 }
         )
         const coverFile = new File([cover], 'cover.webp', {
           type: 'image/webp',
