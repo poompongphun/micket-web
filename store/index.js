@@ -4,9 +4,13 @@ export const state = () => ({
   cart: [],
   haveAccount: true,
   library: [],
+  poster: [],
 })
 
 export const mutations = {
+  setPoster(state, poster) {
+    state.poster = poster
+  },
   updateProfile(state, profile) {
     state.auth.user.profile = profile
   },
@@ -60,6 +64,21 @@ export const mutations = {
 }
 
 export const actions = {
+  async getPoster({ commit }, file) {
+    try {
+      const responsePoster = await this.$axios.$get(`/api/poster`, {
+        progress: false,
+      })
+      commit('setPoster', responsePoster)
+      return responsePoster
+    } catch (error) {
+      commit('setAlert', {
+        color: 'error',
+        text: error.response.data,
+        icon: 'mdi-alert',
+      })
+    }
+  },
   async updateProfile({ commit }, file) {
     try {
       const formData = new FormData()
